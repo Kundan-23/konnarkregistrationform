@@ -1,0 +1,1811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Konnark Stellar — Registration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <style>
+/* ── TOKENS ─────────────────────────────────────────────────── */
+:root {
+  --ink:        #111827;
+  --ink-2:      #374151;
+  --ink-3:      #6B7280;
+  --ink-4:      #9CA3AF;
+  --line:       #E5E7EB;
+  --line-2:     #F3F4F6;
+  --surface:    #FFFFFF;
+  --bg:         #F7F7F5;
+  --navy:       #1B2F55;
+  --navy-hover: #162648;
+  --gold:       #B8973A;
+  --gold-light: #D4AF55;
+  --gold-bg:    #FBF7ED;
+  --gold-border:#E8D89A;
+  --red:        #DC2626;
+  --red-bg:     #FEF2F2;
+  --green:      #16A34A;
+  --green-bg:   #F0FDF4;
+  --green-border:#BBF7D0;
+  --focus-ring: rgba(27,47,85,.18);
+  --r-sm: 6px; --r: 10px; --r-lg: 16px;
+  --ease: cubic-bezier(.4,0,.2,1);
+}
+
+/* ── RESET ──────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+/* ── HEADER ─────────────────────────────────────────────────── */
+.site-header { background: var(--navy); padding: 0 24px; }
+.header-inner { max-width: 680px; margin: 0 auto; padding: 40px 0 36px; }
+.header-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 600; letter-spacing: 1.8px;
+  text-transform: uppercase; color: var(--gold-light); margin-bottom: 16px;
+}
+.header-title {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(26px, 6vw, 38px); font-weight: 400;
+  color: #fff; line-height: 1.18; letter-spacing: -.4px;
+}
+.header-title em { font-style: italic; color: var(--gold-light); }
+.header-note {
+  margin-top: 18px; padding: 14px 16px;
+  border-left: 3px solid var(--gold); background: rgba(255,255,255,.05);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  font-size: 13px; color: rgba(255,255,255,.65); line-height: 1.6;
+}
+.header-note strong { color: rgba(255,255,255,.85); font-weight: 500; }
+.progress-wrap { margin-top: 28px; display: flex; align-items: center; gap: 12px; }
+.progress-track { flex: 1; height: 2px; background: rgba(255,255,255,.1); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--gold-light); border-radius: 2px; width: 0%; transition: width .5s var(--ease); }
+.progress-pct { font-size: 12px; font-weight: 500; color: var(--gold-light); min-width: 36px; text-align: right; }
+
+/* ── STEP NAV ───────────────────────────────────────────────── */
+.step-strip {
+  background: rgba(0,0,0,.18); padding: 0 24px;
+  overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+}
+.step-strip::-webkit-scrollbar { display: none; }
+.step-list { max-width: 680px; margin: 0 auto; display: flex; }
+.step-item {
+  flex-shrink: 0; padding: 12px 14px 11px;
+  font-size: 12px; font-weight: 500; color: rgba(255,255,255,.35);
+  border-bottom: 2px solid transparent; display: flex; align-items: center; gap: 7px;
+  white-space: nowrap; transition: color .2s var(--ease), border-color .2s var(--ease);
+}
+.step-item .s-num {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: rgba(255,255,255,.1); display: flex; align-items: center;
+  justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0;
+  transition: background .2s var(--ease);
+}
+.step-item.active { color: #fff; border-bottom-color: var(--gold-light); }
+.step-item.active .s-num { background: var(--gold); color: var(--navy); }
+.step-item.done { color: rgba(255,255,255,.5); }
+.step-item.done .s-num { background: rgba(22,163,74,.25); color: #4ADE80; }
+
+/* ── MAIN ───────────────────────────────────────────────────── */
+.main { max-width: 680px; margin: 0 auto; padding: 28px 16px 80px; }
+
+/* ── SECTION CARD ───────────────────────────────────────────── */
+.section {
+  background: var(--surface); border-radius: var(--r-lg);
+  border: 1px solid var(--line); margin-bottom: 16px; overflow: hidden;
+}
+.section-head {
+  padding: 22px 24px 20px; border-bottom: 1px solid var(--line-2);
+  display: flex; align-items: flex-start; gap: 14px;
+}
+.section-icon {
+  width: 36px; height: 36px; flex-shrink: 0; border-radius: var(--r-sm);
+  background: var(--navy); display: flex; align-items: center; justify-content: center;
+}
+.section-icon svg { color: #fff; }
+.section-head-text h2 { font-size: 15px; font-weight: 600; color: var(--ink); letter-spacing: -.1px; }
+.section-head-text p { font-size: 12.5px; color: var(--ink-3); margin-top: 2px; }
+.section-head-text .optional-tag {
+  display: inline-block; margin-left: 6px; padding: 1px 7px;
+  background: var(--line-2); border-radius: 100px;
+  font-size: 10px; font-weight: 600; color: var(--ink-4); letter-spacing: .3px;
+  vertical-align: middle;
+}
+.section-body { padding: 24px; }
+.section-body > * + * { margin-top: 20px; }
+
+/* ── FLOATING LABEL ─────────────────────────────────────────── */
+.fl { position: relative; }
+.fl label {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  font-size: 14px; font-weight: 400; color: var(--ink-4);
+  pointer-events: none; background: var(--surface); padding: 0 3px; line-height: 1; z-index: 1;
+  transition: top .18s var(--ease), font-size .18s var(--ease), color .18s var(--ease), font-weight .18s var(--ease);
+}
+.fl.ta label { top: 18px; transform: none; }
+.fl input, .fl textarea, .fl select {
+  width: 100%; padding: 18px 14px 7px;
+  border: 1.5px solid var(--line); border-radius: var(--r);
+  font-family: inherit; font-size: 14px; font-weight: 500; color: var(--ink);
+  background: var(--surface); outline: none; -webkit-appearance: none; appearance: none;
+  min-height: 56px; line-height: 1.4;
+  transition: border-color .18s var(--ease), box-shadow .18s var(--ease);
+}
+.fl textarea { min-height: 104px; padding-top: 22px; resize: vertical; }
+.fl select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%239CA3AF' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center; padding-right: 40px; cursor: pointer;
+}
+.fl input:focus ~ label, .fl input:not(:placeholder-shown) ~ label,
+.fl textarea:focus ~ label, .fl textarea:not(:placeholder-shown) ~ label,
+.fl.ta.filled label, .fl select:focus ~ label, .fl select.filled ~ label {
+  top: 9px; transform: none; font-size: 10.5px; font-weight: 600;
+  color: var(--navy); letter-spacing: .3px; text-transform: uppercase;
+}
+.fl input:focus, .fl textarea:focus, .fl select:focus {
+  border-color: var(--navy); box-shadow: 0 0 0 3px var(--focus-ring);
+}
+.fl input.valid, .fl textarea.valid, .fl select.valid { border-color: var(--green); }
+.fl input.invalid, .fl textarea.invalid, .fl select.invalid { border-color: var(--red); background: var(--red-bg); }
+.fl.has-prefix input { padding-left: 30px; }
+.fl .pre { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 14px; font-weight: 500; color: var(--ink-3); pointer-events: none; z-index: 2; margin-top: 4px; }
+.fl .v-tick { position: absolute; right: 13px; top: 50%; transform: translateY(-50%); pointer-events: none; opacity: 0; transition: opacity .18s var(--ease); color: var(--green); }
+.fl input.valid ~ .v-tick, .fl select.valid ~ .v-tick { opacity: 1; }
+
+/* ── FIELD WRAPPER & ERRORS ─────────────────────────────────── */
+.field-wrap { position: relative; }
+.err-line {
+  display: none; align-items: center; gap: 5px; margin-top: 6px;
+  font-size: 12px; font-weight: 500; color: var(--red); padding-left: 2px;
+}
+.field-wrap.has-error .err-line { display: flex; }
+
+/* ── GRID ───────────────────────────────────────────────────── */
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 520px) { .g2 { grid-template-columns: 1fr; } }
+
+/* ── COUNT TILES ────────────────────────────────────────────── */
+.count-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+@media (max-width: 360px) { .count-grid { grid-template-columns: repeat(2,1fr); } }
+.count-opt input[type="radio"] { display: none; }
+.count-opt label {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px; padding: 16px 8px; border: 1.5px solid var(--line); border-radius: var(--r);
+  cursor: pointer; transition: all .18s var(--ease); background: var(--surface);
+  -webkit-tap-highlight-color: transparent;
+}
+.count-opt label .num { font-size: 22px; font-weight: 700; color: var(--ink-3); line-height: 1; transition: color .18s var(--ease); }
+.count-opt label .lbl { font-size: 10px; font-weight: 500; color: var(--ink-4); letter-spacing: .5px; text-transform: uppercase; }
+.count-opt label:hover { border-color: var(--navy); }
+.count-opt label:hover .num { color: var(--navy); }
+.count-opt input:checked + label { border-color: var(--navy); background: var(--navy); }
+.count-opt input:checked + label .num,
+.count-opt input:checked + label .lbl { color: #fff; }
+
+/* ── NOTICE BANNER ──────────────────────────────────────────── */
+.notice {
+  display: flex; gap: 12px; padding: 14px 16px;
+  background: var(--gold-bg); border: 1px solid var(--gold-border);
+  border-radius: var(--r); font-size: 13px; color: #7A5C00; line-height: 1.6;
+}
+.notice-icon { flex-shrink: 0; width: 18px; height: 18px; color: var(--gold); margin-top: 1px; }
+.notice strong { font-weight: 600; color: #5A4200; }
+
+/* ── APPLICANT ROW ──────────────────────────────────────────── */
+.applicant-row { display: flex; align-items: flex-start; gap: 10px; }
+.a-badge {
+  width: 26px; height: 26px; border-radius: 50%; font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 15px;
+}
+.a-badge.primary { background: var(--navy); color: #fff; }
+.a-badge.secondary { background: var(--line); color: var(--ink-3); }
+
+/* ── PILL RADIO GROUP ───────────────────────────────────────── */
+.pill-group { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill-opt input[type="radio"] { display: none; }
+.pill-opt label {
+  padding: 8px 18px; border: 1.5px solid var(--line); border-radius: 100px;
+  font-size: 13px; font-weight: 500; color: var(--ink-3); cursor: pointer;
+  transition: all .16s var(--ease); display: flex; align-items: center; gap: 6px;
+  -webkit-tap-highlight-color: transparent; min-height: 40px; white-space: nowrap;
+}
+.pill-opt label:hover { border-color: var(--navy); color: var(--navy); }
+.pill-opt input:checked + label { border-color: var(--navy); background: var(--navy); color: #fff; }
+
+/* ── FIELD SUB-LABEL ────────────────────────────────────────── */
+.sub-label {
+  font-size: 11px; font-weight: 600; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--ink-3); margin-bottom: 10px;
+}
+.sub-label span { color: var(--red); }
+
+/* ── FILE UPLOAD ────────────────────────────────────────────── */
+.upload-card {
+  border: 1.5px dashed var(--line); border-radius: var(--r);
+  overflow: hidden; transition: border-color .18s var(--ease);
+}
+.upload-card.has-file { border-style: solid; border-color: var(--green); }
+.upload-trigger {
+  display: flex; align-items: center; gap: 14px; padding: 16px;
+  cursor: pointer; transition: background .16s var(--ease);
+  -webkit-tap-highlight-color: transparent;
+}
+.upload-trigger:hover { background: var(--line-2); }
+.upload-icon {
+  width: 40px; height: 40px; flex-shrink: 0; border-radius: var(--r-sm);
+  background: var(--line-2); display: flex; align-items: center; justify-content: center;
+  transition: background .16s var(--ease);
+}
+.upload-card.has-file .upload-icon { background: var(--green-bg); color: var(--green); }
+.upload-icon svg { color: var(--ink-4); }
+.upload-text h4 { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+.upload-text p  { font-size: 12px; color: var(--ink-4); margin-top: 1px; }
+.upload-card.has-file .upload-text h4 { color: var(--green); }
+.upload-preview {
+  display: none; padding: 0 16px 16px;
+}
+.upload-card.has-file .upload-preview { display: block; }
+.upload-preview img {
+  width: 100%; max-height: 180px; object-fit: contain;
+  border-radius: var(--r-sm); border: 1px solid var(--line);
+  background: var(--line-2);
+}
+.upload-preview-actions {
+  display: flex; justify-content: flex-end; margin-top: 8px;
+}
+.btn-remove-file {
+  display: flex; align-items: center; gap: 4px; padding: 5px 12px;
+  border: 1px solid var(--line); border-radius: var(--r-sm);
+  background: var(--surface); font-family: inherit; font-size: 12px;
+  font-weight: 500; color: var(--ink-3); cursor: pointer;
+  transition: border-color .16s, color .16s;
+}
+.btn-remove-file:hover { border-color: var(--red); color: var(--red); }
+input[type="file"] { display: none; }
+
+/* ── SIGNATURE SECTION ──────────────────────────────────────── */
+.sig-container {
+  border: 1.5px solid var(--line); border-radius: var(--r);
+  overflow: hidden; position: relative; background: #FAFAFA;
+  transition: border-color .18s var(--ease);
+}
+.sig-container.active { border-color: var(--navy); background: #fff; }
+.sig-container.filled { border-color: var(--green); background: #fff; }
+.sig-container.invalid { border-color: var(--red); background: var(--red-bg); }
+#sigCanvas { display: block; width: 100%; height: 180px; touch-action: none; cursor: crosshair; }
+.sig-overlay {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 8px;
+  pointer-events: none; user-select: none; transition: opacity .2s var(--ease);
+}
+.sig-overlay svg { color: var(--ink-4); opacity: .4; }
+.sig-overlay p { font-size: 13px; color: var(--ink-4); }
+.sig-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 12px; border-top: 1px solid var(--line); background: var(--line-2);
+}
+.sig-hint { font-size: 11.5px; color: var(--ink-4); display: flex; align-items: center; gap: 5px; }
+.btn-clear {
+  display: flex; align-items: center; gap: 5px; padding: 6px 12px;
+  border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--surface);
+  font-family: inherit; font-size: 12px; font-weight: 500; color: var(--ink-3);
+  cursor: pointer; transition: all .16s var(--ease);
+}
+.btn-clear:hover { border-color: var(--red); color: var(--red); background: var(--red-bg); }
+
+/* manual signature placeholder */
+.manual-sig-box {
+  border: 1.5px dashed var(--line); border-radius: var(--r);
+  height: 160px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 8px;
+  background: var(--line-2);
+}
+.manual-sig-box svg { color: var(--ink-4); opacity: .3; }
+.manual-sig-box p { font-size: 13px; color: var(--ink-4); text-align: center; line-height: 1.5; }
+.manual-sig-box strong { font-weight: 600; color: var(--ink-3); }
+
+/* ── CONSENT ────────────────────────────────────────────────── */
+.consent-wrap {
+  display: flex; align-items: flex-start; gap: 12px; padding: 16px;
+  border: 1.5px solid var(--line); border-radius: var(--r); background: var(--line-2);
+  cursor: pointer; transition: border-color .16s, background .16s;
+}
+.consent-wrap:has(input:checked) { border-color: var(--navy); background: #EEF3FC; }
+.consent-wrap input[type="checkbox"] {
+  width: 20px; height: 20px; min-height: 20px; flex-shrink: 0;
+  margin-top: 1px; accent-color: var(--navy); cursor: pointer;
+}
+.consent-wrap label { font-size: 13.5px; color: var(--ink-2); line-height: 1.6; cursor: pointer; }
+.consent-err {
+  display: none; align-items: center; gap: 5px; margin-top: 6px;
+  font-size: 12px; font-weight: 500; color: var(--red);
+}
+
+/* ── SUBMIT ─────────────────────────────────────────────────── */
+.submit-wrap { margin-top: 24px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+#submitBtn {
+  width: 100%; max-width: 380px; min-height: 54px; padding: 0 32px;
+  background: var(--navy); color: #fff; border: none; border-radius: var(--r);
+  font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 9px;
+  transition: background .18s var(--ease), transform .1s, box-shadow .18s, opacity .18s;
+  box-shadow: 0 4px 16px rgba(27,47,85,.25);
+}
+#submitBtn:hover:not(:disabled) { background: var(--navy-hover); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(27,47,85,.3); }
+#submitBtn:active:not(:disabled) { transform: translateY(0); }
+#submitBtn:disabled { opacity: .42; cursor: not-allowed; box-shadow: none; transform: none; }
+.submit-meta { font-size: 12px; color: var(--ink-4); display: flex; align-items: center; gap: 5px; }
+
+/* ── HIDDEN ─────────────────────────────────────────────────── */
+.hidden { display: none !important; }
+
+/* ── LOADING OVERLAY ────────────────────────────────────────── */
+#overlay {
+  position: fixed; inset: 0; background: rgba(17,24,39,.55);
+  backdrop-filter: blur(6px); z-index: 9999; display: none;
+  align-items: center; justify-content: center;
+}
+#overlay.on { display: flex; }
+.overlay-card { background: var(--surface); border-radius: var(--r-lg); padding: 36px 40px; text-align: center; min-width: 220px; box-shadow: 0 24px 64px rgba(0,0,0,.2); }
+.spin { width: 40px; height: 40px; border: 3px solid var(--line); border-top-color: var(--navy); border-radius: 50%; animation: spin .7s linear infinite; margin: 0 auto 16px; }
+.overlay-card h3 { font-size: 14px; font-weight: 600; color: var(--ink); }
+.overlay-card p  { font-size: 12.5px; color: var(--ink-3); margin-top: 4px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── CONFIRMATION ───────────────────────────────────────────── */
+#confirmScreen { display: none; max-width: 680px; margin: 0 auto; padding: 28px 16px 80px; }
+.confirm-top { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 40px 24px 32px; text-align: center; margin-bottom: 12px; }
+.confirm-ring { width: 64px; height: 64px; border-radius: 50%; background: var(--green-bg); border: 2px solid var(--green-border); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; animation: pop .35s cubic-bezier(.34,1.56,.64,1) both; }
+.confirm-ring svg { color: var(--green); }
+@keyframes pop { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.confirm-top h2 { font-family: 'DM Serif Display', Georgia, serif; font-size: 24px; font-weight: 400; color: var(--ink); margin-bottom: 6px; }
+.confirm-top p { font-size: 14px; color: var(--ink-3); }
+.ref-pill {
+  display: inline-flex; align-items: center; gap: 8px; margin-top: 20px;
+  padding: 10px 20px; background: var(--navy); border-radius: var(--r-sm);
+  font-family: 'Courier New', monospace; font-size: 15px; font-weight: 700;
+  color: var(--gold-light); letter-spacing: 1px;
+}
+.confirm-table { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; margin-bottom: 12px; }
+.ct-group-title { padding: 10px 20px; font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--ink-4); background: var(--line-2); border-bottom: 1px solid var(--line); }
+.ct-row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 12px 20px; border-bottom: 1px solid var(--line-2); font-size: 13.5px; }
+.ct-row:last-child { border-bottom: none; }
+.ct-k { color: var(--ink-3); font-weight: 400; flex-shrink: 0; }
+.ct-v { color: var(--ink); font-weight: 500; text-align: right; word-break: break-all; }
+.mono { font-family: 'Courier New', monospace; letter-spacing: .5px; font-size: 13px; }
+.confirm-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn-primary { flex: 1; min-width: 140px; min-height: 48px; padding: 0 20px; background: var(--navy); color: #fff; border: none; border-radius: var(--r); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; transition: background .16s; }
+.btn-primary:hover { background: var(--navy-hover); }
+.btn-ghost { flex: 1; min-width: 140px; min-height: 48px; padding: 0 20px; background: var(--surface); color: var(--ink-2); border: 1.5px solid var(--line); border-radius: var(--r); font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; transition: border-color .16s, color .16s; }
+.btn-ghost:hover { border-color: var(--navy); color: var(--navy); }
+
+/* ── TOAST ──────────────────────────────────────────────────── */
+#toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+  background: var(--ink); color: #fff; padding: 11px 20px; border-radius: 100px;
+  font-size: 13.5px; font-weight: 500; z-index: 10000;
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+  white-space: nowrap; max-width: calc(100vw - 32px); overflow: hidden; text-overflow: ellipsis;
+  display: flex; align-items: center; gap: 7px; box-shadow: 0 8px 24px rgba(0,0,0,.2);
+}
+#toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── DIVIDER ────────────────────────────────────────────────── */
+.divider { height: 1px; background: var(--line-2); }
+
+/* ── MOBILE ─────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .main { padding: 20px 12px 80px; }
+  .section-body { padding: 18px; }
+  .section-head { padding: 18px 18px 16px; }
+  .header-inner { padding: 32px 0 28px; }
+  #submitBtn { max-width: 100%; }
+  .confirm-actions { flex-direction: column; }
+}
+
+/* ── PROJECT SELECTION LANDING ─────────────────────────────── */
+#projectLanding {
+  min-height: 100vh; background: var(--navy);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 32px 16px;
+}
+.pl-logo {
+  font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase;
+  color: rgba(255,255,255,.35); margin-bottom: 44px;
+  display: flex; align-items: center; gap: 12px;
+}
+.pl-logo::before, .pl-logo::after { content:''; display:block; width:28px; height:1px; background:rgba(255,255,255,.12); }
+.pl-heading {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(28px, 7vw, 44px); font-weight: 400;
+  color: #fff; text-align: center; line-height: 1.15; margin-bottom: 10px;
+}
+.pl-sub { font-size: 14px; color: rgba(255,255,255,.4); text-align: center; margin-bottom: 44px; }
+.pl-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: 100%; max-width: 500px; }
+@media (max-width: 440px) { .pl-cards { grid-template-columns: 1fr; } }
+.pl-card {
+  position: relative; padding: 32px 22px 26px;
+  border: 1.5px solid rgba(255,255,255,.1); border-radius: var(--r-lg);
+  background: rgba(255,255,255,.04); cursor: pointer; text-align: center;
+  transition: border-color .2s var(--ease), background .2s var(--ease), transform .15s var(--ease);
+  -webkit-tap-highlight-color: transparent; overflow: hidden;
+}
+.pl-card:hover { border-color: rgba(212,175,85,.45); background: rgba(255,255,255,.07); transform: translateY(-2px); }
+.pl-card:active { transform: translateY(0); }
+.pl-card-badge {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(212,175,85,.1); border: 1.5px solid rgba(212,175,85,.22);
+  display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;
+}
+.pl-card-badge svg { color: var(--gold-light); }
+.pl-card-name {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 22px; font-weight: 400; color: #fff; line-height: 1.2; margin-bottom: 4px;
+}
+.pl-card-name em { font-style: italic; color: var(--gold-light); }
+.pl-card-desc { font-size: 12px; color: rgba(255,255,255,.3); margin-bottom: 20px; min-height: 16px; }
+.pl-card-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 18px; background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.12); border-radius: 100px;
+  font-family: inherit; font-size: 12px; font-weight: 500;
+  color: rgba(255,255,255,.6); cursor: pointer;
+  transition: background .16s, border-color .16s, color .16s;
+}
+.pl-card:hover .pl-card-btn { background: var(--gold); border-color: var(--gold); color: var(--navy); font-weight: 600; }
+.pl-footer { margin-top: 36px; font-size: 11px; color: rgba(255,255,255,.18); letter-spacing: .3px; }
+/* change-project chip in header */
+.change-project-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  margin-left: 10px; padding: 3px 10px;
+  background: rgba(212,175,85,.15); border: 1px solid rgba(212,175,85,.25);
+  border-radius: 100px; font-size: 11px; font-weight: 500;
+  color: var(--gold-light); cursor: pointer; vertical-align: middle;
+  transition: background .16s;
+}
+.change-project-btn:hover { background: rgba(212,175,85,.28); }
+  </style>
+</head>
+<body>
+
+<!-- ── PROJECT SELECTION LANDING ───────────────────────────── -->
+<div id="projectLanding">
+  <div class="pl-logo">Konnark</div>
+  <h1 class="pl-heading">Select Your Project</h1>
+  <p class="pl-sub">Choose a project to begin the registration form</p>
+  <div class="pl-cards">
+
+    <!-- Stellar -->
+    <div class="pl-card" onclick="selectProject('Stellar')">
+      <div class="pl-card-badge">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+      <div class="pl-card-name">Konnark <em>Stellar</em></div>
+      <div class="pl-card-desc">Residential Project</div>
+      <div class="pl-card-btn">
+        Select
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </div>
+
+    <!-- Orion -->
+    <div class="pl-card" onclick="selectProject('Orion')">
+      <div class="pl-card-badge">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      </div>
+      <div class="pl-card-name">Konnark <em>Orion</em></div>
+      <div class="pl-card-desc">Residential Project</div>
+      <div class="pl-card-btn">
+        Select
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </div>
+
+  </div>
+  <p class="pl-footer">KONNARK GROUP &nbsp;·&nbsp; REGISTRATION PORTAL</p>
+</div>
+
+<!-- LOADING OVERLAY -->
+<div id="overlay">
+  <div class="overlay-card">
+    <div class="spin"></div>
+    <h3 id="loadMsg">Generating PDF</h3>
+    <p>Please wait a moment</p>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- ── HEADER ────────────────────────────────────────────────── -->
+<header class="site-header" id="siteHeader" style="display:none">
+  <div class="header-inner">
+    <div class="header-eyebrow">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5"/></svg>
+      Registration Procedure
+      <button class="change-project-btn" onclick="goToLanding()" title="Change project">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Change
+      </button>
+    </div>
+    <h1 class="header-title" id="headerTitle">Konnark <em id="headerProjectName">Stellar</em></h1>
+    <div class="header-note">
+      <strong>Important:</strong> All applicants must be present at the time of Registration.
+      Details filled here will be used in the Agreement.
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <span class="progress-pct" id="progressPct">0%</span>
+    </div>
+  </div>
+</header>
+
+<!-- ── STEP NAV ──────────────────────────────────────────────── -->
+<div class="step-strip" id="stepStrip" style="display:none">
+  <div class="step-list">
+    <div class="step-item active" data-sec="applicants"><span class="s-num">1</span> Applicants</div>
+    <div class="step-item" data-sec="property"><span class="s-num">2</span> Property</div>
+    <div class="step-item" data-sec="contact"><span class="s-num">3</span> Contact</div>
+    <div class="step-item" data-sec="bank"><span class="s-num">4</span> Bank</div>
+    <div class="step-item" data-sec="signature"><span class="s-num">5</span> Sign</div>
+  </div>
+</div>
+
+<!-- ── FORM ──────────────────────────────────────────────────── -->
+<div class="main" id="formWrap" style="display:none">
+<form id="regForm" novalidate autocomplete="off">
+
+<!-- ══════════ 1. APPLICANTS ══════════ -->
+<div class="section" id="sec-applicants">
+  <div class="section-head">
+    <div class="section-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    </div>
+    <div class="section-head-text">
+      <h2>Applicants</h2>
+      <p>Select number of applicants and enter names as per PAN card</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <!-- Applicant count -->
+    <div class="field-wrap" id="fw-count">
+      <p class="sub-label">Number of Applicants <span>*</span></p>
+      <div class="count-grid">
+        <div class="count-opt"><input type="radio" name="num_app" id="n1" value="1"><label for="n1"><span class="num">1</span><span class="lbl">Applicant</span></label></div>
+        <div class="count-opt"><input type="radio" name="num_app" id="n2" value="2"><label for="n2"><span class="num">2</span><span class="lbl">Applicants</span></label></div>
+        <div class="count-opt"><input type="radio" name="num_app" id="n3" value="3"><label for="n3"><span class="num">3</span><span class="lbl">Applicants</span></label></div>
+        <div class="count-opt"><input type="radio" name="num_app" id="n4" value="4"><label for="n4"><span class="num">4</span><span class="lbl">Applicants</span></label></div>
+      </div>
+      <div class="err-line" id="e-count">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg>
+        Please select number of applicants.
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- PAN notice -->
+    <div class="notice">
+      <svg class="notice-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
+      <p><strong>Name must match PAN card exactly,</strong> as per order by registration authority officer. Use CAPITAL LETTERS only — one space between First, Middle and Last name.</p>
+    </div>
+
+    <!-- Applicant 1 -->
+    <div class="field-wrap" id="fw-a1">
+      <div class="applicant-row">
+        <div class="a-badge primary">1</div>
+        <div class="fl" style="flex:1">
+          <input type="text" id="a1" name="applicant_1_name" placeholder=" " autocomplete="off" />
+          <label for="a1">Name of 1st Applicant <span style="color:var(--red)">*</span></label>
+          <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+      </div>
+      <div class="err-line" id="e-a1" style="padding-left:36px">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg>
+        Required — capital letters, single spaces only.
+      </div>
+    </div>
+
+    <!-- Applicant 2 -->
+    <div class="field-wrap hidden" id="fw-a2">
+      <div class="applicant-row">
+        <div class="a-badge secondary">2</div>
+        <div class="fl" style="flex:1">
+          <input type="text" id="a2" name="applicant_2_name" placeholder=" " autocomplete="off" />
+          <label for="a2">Name of 2nd Applicant <span style="color:var(--red)">*</span></label>
+          <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+      </div>
+      <div class="err-line" id="e-a2" style="padding-left:36px">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg>
+        Required — capital letters, single spaces only.
+      </div>
+    </div>
+
+    <!-- Applicant 3 -->
+    <div class="field-wrap hidden" id="fw-a3">
+      <div class="applicant-row">
+        <div class="a-badge secondary">3</div>
+        <div class="fl" style="flex:1">
+          <input type="text" id="a3" name="applicant_3_name" placeholder=" " autocomplete="off" />
+          <label for="a3">Name of 3rd Applicant <span style="color:var(--red)">*</span></label>
+          <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+      </div>
+      <div class="err-line" id="e-a3" style="padding-left:36px">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg>
+        Required — capital letters, single spaces only.
+      </div>
+    </div>
+
+    <!-- Applicant 4 -->
+    <div class="field-wrap hidden" id="fw-a4">
+      <div class="applicant-row">
+        <div class="a-badge secondary">4</div>
+        <div class="fl" style="flex:1">
+          <input type="text" id="a4" name="applicant_4_name" placeholder=" " autocomplete="off" />
+          <label for="a4">Name of 4th Applicant <span style="color:var(--red)">*</span></label>
+          <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+      </div>
+      <div class="err-line" id="e-a4" style="padding-left:36px">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg>
+        Required — capital letters, single spaces only.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ 2. PROPERTY ══════════ -->
+<div class="section" id="sec-property">
+  <div class="section-head">
+    <div class="section-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
+    <div class="section-head-text">
+      <h2>Property Details</h2>
+      <p>Agreement value, parking, flat number and address</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <!-- Agreement value -->
+    <div class="field-wrap" id="fw-agr">
+      <div class="fl has-prefix">
+        <span class="pre">₹</span>
+        <input type="number" id="agr" name="agreement_value" placeholder=" " min="0.01" step="0.01" inputmode="decimal" />
+        <label for="agr">Agreement Value <span style="color:var(--red)">*</span></label>
+      </div>
+      <div class="err-line" id="e-agr">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg>
+        Enter a valid positive amount.
+      </div>
+    </div>
+
+    <!-- Parking type (no amount) -->
+    <div class="field-wrap" id="fw-park">
+      <p class="sub-label">Parking <span>*</span></p>
+      <div class="pill-group">
+        <div class="pill-opt"><input type="radio" name="park_status" id="ps-inc" value="Including"><label for="ps-inc">Including</label></div>
+        <div class="pill-opt"><input type="radio" name="park_status" id="ps-exc" value="Excluding"><label for="ps-exc">Excluding</label></div>
+        <div class="pill-opt"><input type="radio" name="park_status" id="ps-nr" value="Not Required"><label for="ps-nr">Not Required</label></div>
+      </div>
+      <div class="err-line" id="e-park" style="margin-top:8px">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg>
+        Select a parking option.
+      </div>
+    </div>
+
+    <!-- Parking Type — visible only when Including/Excluding selected -->
+    <div class="field-wrap hidden" id="fw-park-type">
+      <p class="sub-label">Parking Type <span>*</span></p>
+      <div class="pill-group">
+        <div class="pill-opt"><input type="radio" name="park_type" id="pt-a" value="Type A"><label for="pt-a">Type A</label></div>
+        <div class="pill-opt"><input type="radio" name="park_type" id="pt-b" value="Type B"><label for="pt-b">Type B</label></div>
+      </div>
+      <div class="err-line" id="e-park-type" style="margin-top:8px">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg>
+        Select Type A or Type B.
+      </div>
+    </div>
+
+    <!-- Flat + Floor -->
+    <div class="g2">
+      <div class="field-wrap" id="fw-flat">
+        <div class="fl">
+          <input type="text" id="flat" name="flat_no" placeholder=" " />
+          <label for="flat">Flat No. Booked <span style="color:var(--red)">*</span></label>
+          <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+        <div class="err-line" id="e-flat"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Required.</div>
+      </div>
+      <div class="field-wrap" id="fw-floor">
+        <div class="fl">
+          <input type="text" id="floor" name="floor" placeholder=" " />
+          <label for="floor">Floor <span style="color:var(--red)">*</span></label>
+          <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+        <div class="err-line" id="e-floor"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Required.</div>
+      </div>
+    </div>
+
+    <!-- Address -->
+    <div class="field-wrap" id="fw-addr">
+      <div class="fl ta">
+        <textarea id="addr" name="address" placeholder=" " rows="3"></textarea>
+        <label for="addr">Full Address <span style="color:var(--red)">*</span></label>
+      </div>
+      <div class="err-line" id="e-addr"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Address is required.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ 3. CONTACT ══════════ -->
+<div class="section" id="sec-contact">
+  <div class="section-head">
+    <div class="section-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+    </div>
+    <div class="section-head-text">
+      <h2>Contact &amp; Identity</h2>
+      <p>PAN card number, mobile and email address</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="field-wrap" id="fw-pan">
+      <div class="fl">
+        <input type="text" id="pan" name="pan_number" placeholder=" " maxlength="10" autocomplete="off" spellcheck="false" />
+        <label for="pan">PAN Card Number <span style="color:var(--red)">*</span></label>
+        <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+      </div>
+      <div class="err-line" id="e-pan"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Invalid PAN — format: ABCDE1234F</div>
+    </div>
+
+    <div class="field-wrap" id="fw-aadhaar">
+      <div class="fl">
+        <input type="text" id="aadhaar_no" name="aadhaar_number" placeholder=" " maxlength="12" inputmode="numeric" autocomplete="off" spellcheck="false" />
+        <label for="aadhaar_no">Aadhaar Card Number <span style="color:var(--red)">*</span></label>
+        <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+      </div>
+      <div class="err-line" id="e-aadhaar"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Enter a valid 12-digit Aadhaar number.</div>
+    </div>
+
+    <div class="g2">
+      <div class="field-wrap" id="fw-mob">
+        <div class="fl">
+          <input type="tel" id="mob" name="contact_number" placeholder=" " inputmode="tel" />
+          <label for="mob">Contact Number (+91) <span style="color:var(--red)">*</span></label>
+          <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+        <div class="err-line" id="e-mob"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Valid 10-digit Indian mobile required.</div>
+      </div>
+      <div class="field-wrap" id="fw-email">
+        <div class="fl">
+          <input type="email" id="email" name="email" placeholder=" " inputmode="email" />
+          <label for="email">Email Address <span style="color:var(--red)">*</span></label>
+          <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+        <div class="err-line" id="e-email"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Enter a valid email address.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ 4. BANK DETAILS ══════════ -->
+<div class="section" id="sec-bank">
+  <div class="section-head">
+    <div class="section-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+    </div>
+    <div class="section-head-text">
+      <h2>Bank Details</h2>
+      <p>Account information for registration processing</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="field-wrap" id="fw-bname">
+      <div class="fl">
+        <input type="text" id="bname" name="bank_account_holder_name" placeholder=" " autocomplete="off" />
+        <label for="bname">Account Holder Name <span style="color:var(--red)">*</span></label>
+        <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+      </div>
+      <div class="err-line" id="e-bname"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Account holder name is required.</div>
+    </div>
+
+    <div class="g2">
+      <div class="field-wrap" id="fw-accno">
+        <div class="fl">
+          <input type="text" id="accno" name="bank_account_number" placeholder=" " maxlength="18" inputmode="numeric" autocomplete="off" />
+          <label for="accno">Account Number (9–18 digits) <span style="color:var(--red)">*</span></label>
+          <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+        <div class="err-line" id="e-accno"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> 9–18 digits required.</div>
+      </div>
+      <div class="field-wrap" id="fw-ifsc">
+        <div class="fl">
+          <input type="text" id="ifsc" name="ifsc_code" placeholder=" " maxlength="11" autocomplete="off" spellcheck="false" />
+          <label for="ifsc">IFSC Code <span style="color:var(--red)">*</span></label>
+          <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+        <div class="err-line" id="e-ifsc"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Format: SBIN0001234</div>
+      </div>
+    </div>
+
+    <div class="g2">
+      <div class="field-wrap" id="fw-bnk">
+        <div class="fl">
+          <select id="bnk" name="bank_name">
+            <option value=""></option>
+            <option>State Bank of India</option>
+            <option>HDFC Bank</option>
+            <option>ICICI Bank</option>
+            <option>Axis Bank</option>
+            <option>Kotak Mahindra Bank</option>
+            <option>Bank of Baroda</option>
+            <option>Punjab National Bank</option>
+            <option>Canara Bank</option>
+            <option>Union Bank of India</option>
+            <option>Bank of India</option>
+            <option>IndusInd Bank</option>
+            <option>Yes Bank</option>
+            <option>IDFC First Bank</option>
+            <option>Federal Bank</option>
+            <option>South Indian Bank</option>
+            <option>Bandhan Bank</option>
+            <option>RBL Bank</option>
+            <option>UCO Bank</option>
+            <option>Central Bank of India</option>
+            <option>Indian Bank</option>
+            <option>Other</option>
+          </select>
+          <label for="bnk">Bank Name <span style="color:var(--red)">*</span></label>
+        </div>
+        <div class="err-line" id="e-bnk"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Please select your bank.</div>
+      </div>
+      <div class="field-wrap" id="fw-branch">
+        <div class="fl">
+          <input type="text" id="branch" name="bank_branch" placeholder=" " />
+          <label for="branch">Branch <span style="color:var(--red)">*</span></label>
+          <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+        <div class="err-line" id="e-branch"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Branch is required.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ 5. DEAL NOTES ══════════ -->
+<div class="section" id="sec-notes">
+  <div class="section-head">
+    <div class="section-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+    </div>
+    <div class="section-head-text">
+      <h2>Deal Notes <span class="optional-tag">Optional</span></h2>
+      <p>Special remarks, terms or notes — will be printed in the PDF</p>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="field-wrap" id="fw-notes">
+      <div class="fl ta">
+        <textarea id="deal_notes" name="deal_notes" placeholder=" " rows="4"></textarea>
+        <label for="deal_notes">Deal Notes</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ 6. DOCUMENTS ══════════ -->
+<div class="section" id="sec-docs">
+  <div class="section-head">
+    <div class="section-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+    </div>
+    <div class="section-head-text">
+      <h2>Documents <span class="optional-tag">Optional</span></h2>
+      <p>Attach Aadhaar and PAN card images — added as pages in the PDF</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <!-- Aadhaar Card -->
+    <div>
+      <p class="sub-label" style="margin-bottom:8px">Aadhaar Card</p>
+      <div class="upload-card" id="aadhaarCard">
+        <input type="file" id="aadhaar_file" accept="image/jpeg,image/png,image/webp,image/heic" />
+        <label class="upload-trigger" for="aadhaar_file">
+          <div class="upload-icon" id="aadhaarIcon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </div>
+          <div class="upload-text">
+            <h4 id="aadhaarTitle">Upload Aadhaar Card</h4>
+            <p>JPG, PNG or WEBP — image only</p>
+          </div>
+        </label>
+        <div class="upload-preview" id="aadhaarPreview">
+          <img id="aadhaarImg" src="" alt="Aadhaar preview" />
+          <div class="upload-preview-actions">
+            <button type="button" class="btn-remove-file" id="removeAadhaar">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+              Remove
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAN Card Image -->
+    <div>
+      <p class="sub-label" style="margin-bottom:8px">PAN Card Image</p>
+      <div class="upload-card" id="panCardImg">
+        <input type="file" id="pan_file" accept="image/jpeg,image/png,image/webp,image/heic" />
+        <label class="upload-trigger" for="pan_file">
+          <div class="upload-icon" id="panIcon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </div>
+          <div class="upload-text">
+            <h4 id="panTitle">Upload PAN Card</h4>
+            <p>JPG, PNG or WEBP — image only</p>
+          </div>
+        </label>
+        <div class="upload-preview" id="panPreview">
+          <img id="panImg" src="" alt="PAN card preview" />
+          <div class="upload-preview-actions">
+            <button type="button" class="btn-remove-file" id="removePan">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+              Remove
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ 7. SIGNATURE & DECLARATION ══════════ -->
+<div class="section" id="sec-signature">
+  <div class="section-head">
+    <div class="section-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+    </div>
+    <div class="section-head-text">
+      <h2>Signature &amp; Declaration</h2>
+      <p>Choose how you would like to sign this form</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <!-- Signature method toggle -->
+    <div class="field-wrap" id="fw-sig-type">
+      <p class="sub-label">Signature Method <span style="color:var(--red)">*</span></p>
+      <div class="pill-group">
+        <div class="pill-opt">
+          <input type="radio" name="sig_type" id="st-digital" value="digital">
+          <label for="st-digital">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+            Draw digital signature
+          </label>
+        </div>
+        <div class="pill-opt">
+          <input type="radio" name="sig_type" id="st-manual" value="manual">
+          <label for="st-manual">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+            Sign manually on paper
+          </label>
+        </div>
+      </div>
+      <div class="err-line" id="e-sig-type" style="margin-top:8px">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg>
+        Please select a signature method.
+      </div>
+    </div>
+
+    <!-- Digital signature pad -->
+    <div id="sig-digital-section" class="hidden">
+      <div class="field-wrap" id="fw-sig">
+        <div class="sig-container" id="sigBox">
+          <canvas id="sigCanvas"></canvas>
+          <div class="sig-overlay" id="sigOverlay">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+            <p>Draw your signature here</p>
+          </div>
+        </div>
+        <div class="sig-bar">
+          <span class="sig-hint">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Signature embedded in your PDF
+          </span>
+          <button type="button" class="btn-clear" id="clearSig">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
+            Clear
+          </button>
+        </div>
+        <div class="err-line" id="e-sig" style="margin-top:8px">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg>
+          Please draw your signature above.
+        </div>
+      </div>
+    </div>
+
+    <!-- Manual signature placeholder -->
+    <div id="sig-manual-section" class="hidden">
+      <div class="manual-sig-box">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+        <p><strong>Blank signature area</strong><br>The PDF will include an empty space<br>for a physical signature</p>
+      </div>
+    </div>
+
+    <!-- Date -->
+    <div class="field-wrap" id="fw-date">
+      <div class="fl">
+        <input type="date" id="dt" name="date_filled" placeholder=" " />
+        <label for="dt">Date <span style="color:var(--red)">*</span></label>
+      </div>
+      <div class="err-line" id="e-date"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Date is required.</div>
+    </div>
+
+    <!-- Consent -->
+    <div>
+      <div class="consent-wrap">
+        <input type="checkbox" id="consent" name="consent" />
+        <label for="consent">
+          I confirm that the details above are accurate and consent to their use
+          for property registration purposes by Konnark Stellar.
+        </label>
+      </div>
+      <div class="consent-err" id="e-consent">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg>
+        Please confirm your consent before submitting.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ SUBMIT ══════════ -->
+<div class="submit-wrap">
+  <button type="submit" id="submitBtn" disabled>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    Submit Registration
+  </button>
+  <p class="submit-meta">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    Encrypted and transmitted securely over HTTPS
+  </p>
+</div>
+
+</form>
+</div><!-- /formWrap -->
+
+<!-- ── CONFIRMATION ──────────────────────────────────────────── -->
+<div id="confirmScreen">
+  <div class="confirm-top">
+    <div class="confirm-ring">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h2>Registration Submitted</h2>
+    <p>Your details have been recorded. Keep the reference ID for your records.</p>
+    <div class="ref-pill">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      <span id="refId">KS----------</span>
+    </div>
+  </div>
+  <div class="confirm-table" style="margin-top:12px">
+    <div class="ct-group-title">Submission Summary</div>
+    <div id="confirmRows"></div>
+    <div class="confirm-actions" style="padding:16px;border-top:1px solid var(--line)">
+      <button class="btn-primary" id="dlBtn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download PDF
+      </button>
+      <button class="btn-ghost" id="newBtn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New Entry
+      </button>
+    </div>
+  </div>
+  <p style="text-align:center;margin-top:14px;font-size:12px;color:var(--ink-4)">
+    A copy has been sent to your email address.
+  </p>
+</div>
+
+<!-- ── JAVASCRIPT ─────────────────────────────────────────────── -->
+<script>
+/* ── CONFIG ──────────────────────────────────────────────────── */
+/* ── PROJECT SELECTION ───────────────────────────────────────── */
+let selectedProject = ''; // 'Stellar' or 'Orion'
+
+function selectProject(name) {
+  selectedProject = name;
+  // update header
+  document.getElementById('headerProjectName').textContent = name;
+  document.title = `Konnark ${name} — Registration`;
+  // show form UI, hide landing
+  document.getElementById('projectLanding').style.display  = 'none';
+  document.getElementById('siteHeader').style.display      = '';
+  document.getElementById('stepStrip').style.display       = '';
+  document.getElementById('formWrap').style.display        = '';
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+function goToLanding() {
+  // only go back if form has not been started (or always allow)
+  document.getElementById('projectLanding').style.display  = '';
+  document.getElementById('siteHeader').style.display      = 'none';
+  document.getElementById('stepStrip').style.display       = 'none';
+  document.getElementById('formWrap').style.display        = 'none';
+  selectedProject = '';
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+const CFG = {
+  EMAILJS_PUBLIC_KEY:  'YOUR_EMAILJS_PUBLIC_KEY',
+  EMAILJS_SERVICE_ID:  'YOUR_SERVICE_ID',
+  EMAILJS_TEMPLATE_ID: 'YOUR_TEMPLATE_ID',
+  ADMIN_EMAIL:         'admin@konnarkstellar.com',
+  GOOGLE_SCRIPT_URL:   '',
+};
+
+/* ── CONSOLE SUPPRESS (production) ──────────────────────────── */
+(function(){
+  const isDev = ['localhost','127.0.0.1'].includes(location.hostname);
+  if (!isDev) { const n=()=>{}; console.log=console.info=console.debug=console.warn=n; }
+})();
+
+/* ── EMAILJS ─────────────────────────────────────────────────── */
+if (CFG.EMAILJS_PUBLIC_KEY !== 'YOUR_EMAILJS_PUBLIC_KEY')
+  emailjs.init({ publicKey: CFG.EMAILJS_PUBLIC_KEY });
+
+/* ── SIGNATURE PAD ──────────────────────────────────────────── */
+const sigCanvas  = document.getElementById('sigCanvas');
+const sigPad     = new SignaturePad(sigCanvas, { backgroundColor:'rgb(255,255,255)', penColor:'#111827', minWidth:1.5, maxWidth:3 });
+const sigBox     = document.getElementById('sigBox');
+const sigOverlay = document.getElementById('sigOverlay');
+
+function resizeSig() {
+  const r = Math.max(window.devicePixelRatio||1,1);
+  sigCanvas.width  = sigCanvas.offsetWidth  * r;
+  sigCanvas.height = sigCanvas.offsetHeight * r;
+  sigCanvas.getContext('2d').scale(r,r);
+  sigPad.clear();
+}
+window.addEventListener('resize', resizeSig);
+resizeSig();
+
+sigPad.addEventListener('beginStroke', ()=>{ sigOverlay.style.opacity='0'; sigBox.classList.add('active'); sigBox.classList.remove('invalid'); });
+sigPad.addEventListener('endStroke',   ()=>{ if(!sigPad.isEmpty()) sigBox.classList.add('filled'); updateState(); });
+
+document.getElementById('clearSig').addEventListener('click', ()=>{
+  sigPad.clear();
+  sigOverlay.style.opacity='';
+  sigBox.classList.remove('active','filled','invalid');
+  document.getElementById('fw-sig').classList.remove('touched','has-error');
+  updateState();
+});
+
+/* ── SIGNATURE TYPE TOGGLE ──────────────────────────────────── */
+let sigType = '';
+document.querySelectorAll('input[name="sig_type"]').forEach(r => {
+  r.addEventListener('change', function() {
+    sigType = this.value;
+    const digitalSec = document.getElementById('sig-digital-section');
+    const manualSec  = document.getElementById('sig-manual-section');
+    if (sigType === 'digital') {
+      digitalSec.classList.remove('hidden');
+      manualSec.classList.add('hidden');
+      // resize pad now that it's visible
+      setTimeout(resizeSig, 50);
+    } else {
+      digitalSec.classList.add('hidden');
+      manualSec.classList.remove('hidden');
+    }
+    vf('fw-sig-type');
+    updateState(); updateSteps();
+  });
+});
+
+/* ── DATE ────────────────────────────────────────────────────── */
+document.getElementById('dt').value = new Date().toISOString().slice(0,10);
+
+/* ── APPLICANT COUNT ─────────────────────────────────────────── */
+let numApp = 0;
+document.querySelectorAll('input[name="num_app"]').forEach(r => {
+  r.addEventListener('change', function() {
+    numApp = +this.value;
+    for (let i=2; i<=4; i++) {
+      const fw  = document.getElementById(`fw-a${i}`);
+      const inp = document.getElementById(`a${i}`);
+      if (i <= numApp) { fw.classList.remove('hidden'); inp.required=true; }
+      else { fw.classList.add('hidden'); inp.required=false; inp.value=''; fw.classList.remove('touched','has-error'); }
+    }
+    document.getElementById('fw-count').classList.add('touched');
+    updateState(); updateSteps();
+  });
+});
+
+/* ── FILE UPLOAD HELPERS ────────────────────────────────────── */
+let aadhaarDataUrl = null;
+let panDataUrl     = null;
+
+function setupUpload(inputId, cardId, imgId, titleId, iconId, removeId, onSet) {
+  const input  = document.getElementById(inputId);
+  const card   = document.getElementById(cardId);
+  const img    = document.getElementById(imgId);
+  const title  = document.getElementById(titleId);
+  const remove = document.getElementById(removeId);
+
+  input.addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { showToast('Please upload an image file (JPG, PNG, WEBP).'); this.value=''; return; }
+    if (file.size > 8*1024*1024) { showToast('File too large — maximum 8 MB.'); this.value=''; return; }
+    const reader = new FileReader();
+    reader.onload = e => {
+      const url = e.target.result;
+      onSet(url);
+      img.src = url;
+      card.classList.add('has-file');
+      title.textContent = file.name;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  remove.addEventListener('click', ()=>{
+    onSet(null);
+    img.src=''; input.value='';
+    card.classList.remove('has-file');
+    title.textContent = inputId==='aadhaar_file' ? 'Upload Aadhaar Card' : 'Upload PAN Card';
+  });
+}
+
+setupUpload('aadhaar_file','aadhaarCard','aadhaarImg','aadhaarTitle','aadhaarIcon','removeAadhaar', v=>{ aadhaarDataUrl=v; });
+setupUpload('pan_file','panCardImg','panImg','panTitle','panIcon','removePan', v=>{ panDataUrl=v; });
+
+const name_re    = /^[A-Z]+( [A-Z]+)*$/;
+const pan_re     = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
+const ifsc_re    = /^[A-Z]{4}0[A-Z0-9]{6}$/;
+const mob_re     = /^[6-9]\d{9}$/;
+const email_re   = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const acc_re     = /^\d{9,18}$/;
+const aadhaar_re = /^\d{12}$/;
+
+function cleanMob(v) {
+  v = v.trim().replace(/\s/g,'');
+  if (v.startsWith('+91')) v=v.slice(3);
+  if (v.startsWith('91') && v.length===12) v=v.slice(2);
+  return v;
+}
+
+const V = {
+  'fw-count':      () => numApp >= 1,
+  'fw-a1':         () => name_re.test(g('a1').trim()),
+  'fw-a2':         () => numApp<2 || name_re.test(g('a2').trim()),
+  'fw-a3':         () => numApp<3 || name_re.test(g('a3').trim()),
+  'fw-a4':         () => numApp<4 || name_re.test(g('a4').trim()),
+  'fw-agr':        () => { const v=parseFloat(g('agr')); return !isNaN(v)&&v>0; },
+  'fw-park':       () => !!document.querySelector('input[name="park_status"]:checked'),
+  'fw-park-type':  () => {
+    const ps = document.querySelector('input[name="park_status"]:checked')?.value;
+    if (ps === 'Not Required') return true;            // not required when N/A
+    return !!document.querySelector('input[name="park_type"]:checked');
+  },
+  'fw-flat':       () => g('flat').trim().length>0,
+  'fw-floor':      () => g('floor').trim().length>0,
+  'fw-addr':       () => g('addr').trim().length>0,
+  'fw-pan':        () => pan_re.test(g('pan').trim()),
+  'fw-aadhaar':    () => aadhaar_re.test(g('aadhaar_no').trim()),
+  'fw-mob':        () => mob_re.test(cleanMob(g('mob'))),
+  'fw-email':      () => email_re.test(g('email').trim()),
+  'fw-bname':      () => g('bname').trim().length>0,
+  'fw-accno':      () => acc_re.test(g('accno').trim()),
+  'fw-ifsc':       () => ifsc_re.test(g('ifsc').trim()),
+  'fw-bnk':        () => g('bnk') !== '',
+  'fw-branch':     () => g('branch').trim().length>0,
+  'fw-sig-type':   () => sigType !== '',
+  'fw-sig':        () => sigType === 'manual' || !sigPad.isEmpty(),
+  'fw-date':       () => g('dt') !== '',
+  'fw-consent':    () => document.getElementById('consent').checked,
+};
+
+function g(id) { const el=document.getElementById(id); return el ? el.value : ''; }
+
+function vf(fwId) {
+  const fw = document.getElementById(fwId);
+  if (!fw || fw.classList.contains('hidden')) return true;
+  // fw-sig is inside a hidden container when 'manual' — skip if digital section hidden
+  if (fwId==='fw-sig' && sigType==='manual') return true;
+  const ok = V[fwId]?.() ?? true;
+  fw.classList.add('touched');
+  fw.classList.toggle('has-error', !ok);
+  const inp = fw.querySelector('input:not([type="radio"]):not([type="checkbox"]),textarea,select');
+  if (inp) { inp.classList.toggle('valid',ok); inp.classList.toggle('invalid',!ok); }
+  if (fwId==='fw-sig') { sigBox.classList.toggle('invalid',!ok); if(!sigPad.isEmpty()) sigBox.classList.add('filled'); }
+  return ok;
+}
+
+/* ── AUTO UPPERCASE ──────────────────────────────────────────── */
+['a1','a2','a3','a4','bname'].forEach(id => {
+  document.getElementById(id).addEventListener('input', function() {
+    const p=this.selectionStart;
+    this.value=this.value.toUpperCase().replace(/  +/g,' ');
+    try{this.setSelectionRange(p,p);}catch(e){}
+  });
+});
+['pan','ifsc'].forEach(id => {
+  document.getElementById(id).addEventListener('input', function() {
+    const p=this.selectionStart;
+    this.value=this.value.toUpperCase();
+    try{this.setSelectionRange(p,p);}catch(e){}
+  });
+});
+document.getElementById('accno').addEventListener('input', function() {
+  this.value=this.value.replace(/[^\d]/g,'');
+});
+// Aadhaar: digits only
+document.getElementById('aadhaar_no').addEventListener('input', function() {
+  this.value=this.value.replace(/[^\d]/g,'');
+});
+
+/* ── BLUR / INPUT WIRING ─────────────────────────────────────── */
+const fmap = {
+  a1:'fw-a1',a2:'fw-a2',a3:'fw-a3',a4:'fw-a4',
+  agr:'fw-agr',flat:'fw-flat',floor:'fw-floor',addr:'fw-addr',
+  pan:'fw-pan',aadhaar_no:'fw-aadhaar',mob:'fw-mob',email:'fw-email',
+  bname:'fw-bname',accno:'fw-accno',ifsc:'fw-ifsc',
+  bnk:'fw-bnk',branch:'fw-branch',dt:'fw-date',
+};
+Object.entries(fmap).forEach(([id,fw])=>{
+  const el=document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('blur',()=>{ vf(fw); updateState(); updateSteps(); });
+  el.addEventListener('input',()=>{
+    if (document.getElementById(fw)?.classList.contains('touched')) { vf(fw); updateState(); }
+    if (el.tagName==='SELECT') el.classList.toggle('filled',el.value!=='');
+    updateSteps();
+  });
+  if (el.tagName==='SELECT') el.classList.toggle('filled',el.value!=='');
+});
+
+// textarea floating label
+document.getElementById('addr').addEventListener('input', function() {
+  this.closest('.fl').classList.toggle('filled',this.value.length>0);
+});
+document.getElementById('deal_notes').addEventListener('input', function() {
+  this.closest('.fl').classList.toggle('filled',this.value.length>0);
+});
+
+// parking status — show/hide Type A/B row
+document.querySelectorAll('input[name="park_status"]').forEach(r=>{
+  r.addEventListener('change', function() {
+    const typeFw = document.getElementById('fw-park-type');
+    if (this.value === 'Not Required') {
+      typeFw.classList.add('hidden');
+      // clear any selected type
+      document.querySelectorAll('input[name="park_type"]').forEach(t=>t.checked=false);
+      typeFw.classList.remove('touched','has-error');
+    } else {
+      typeFw.classList.remove('hidden');
+    }
+    vf('fw-park'); updateState(); updateSteps();
+  });
+});
+
+// parking type
+document.querySelectorAll('input[name="park_type"]').forEach(r=>{
+  r.addEventListener('change',()=>{ vf('fw-park-type'); updateState(); updateSteps(); });
+});
+
+// consent
+document.getElementById('consent').addEventListener('change',()=>{
+  document.getElementById('e-consent').style.display =
+    document.getElementById('consent').checked ? 'none' : 'flex';
+  updateState(); updateSteps();
+});
+
+/* ── STEP NAV ────────────────────────────────────────────────── */
+const secV = {
+  applicants: ()=> V['fw-count']() && V['fw-a1']() && V['fw-a2']() && V['fw-a3']() && V['fw-a4'](),
+  property:   ()=> V['fw-agr']() && V['fw-park']() && V['fw-park-type']() && V['fw-flat']() && V['fw-floor']() && V['fw-addr'](),
+  contact:    ()=> V['fw-pan']() && V['fw-aadhaar']() && V['fw-mob']() && V['fw-email'](),
+  bank:       ()=> V['fw-bname']() && V['fw-accno']() && V['fw-ifsc']() && V['fw-bnk']() && V['fw-branch'](),
+  signature:  ()=> V['fw-sig-type']() && V['fw-sig']() && V['fw-date']() && V['fw-consent'](),
+};
+function updateSteps() {
+  document.querySelectorAll('.step-item').forEach(el=>{
+    const s=el.dataset.sec;
+    const done=secV[s]?.()??false;
+    el.classList.toggle('done',done);
+    el.classList.toggle('active',!done);
+  });
+}
+
+/* ── SUBMIT STATE ────────────────────────────────────────────── */
+function updateState() {
+  const allKeys = Object.keys(V).filter(fw=>{
+    const el=document.getElementById(fw);
+    if (!el || el.classList.contains('hidden')) return false;
+    if (fw==='fw-sig' && sigType==='manual') return false;
+    return true;
+  });
+  const all = allKeys.every(fw=> V[fw]?.()??true);
+  document.getElementById('submitBtn').disabled = !all;
+
+  const total  = allKeys.length;
+  const filled = allKeys.filter(fw=> V[fw]?.()??false).length;
+  const pct = total ? Math.round(filled/total*100) : 0;
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('progressPct').textContent  = pct+'%';
+}
+
+/* ── HELPERS ─────────────────────────────────────────────────── */
+function refId() {
+  const prefix = selectedProject === 'Orion' ? 'KO' : 'KS';
+  return `${prefix}-${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${Math.floor(1000+Math.random()*9000)}`;
+}
+function maskPan(p){ return p?.length>=4?'██████'+p.slice(-4):'**********'; }
+function maskAcc(a){ return a?.length>=4?'•'.repeat(a.length-4)+a.slice(-4):'**********'; }
+function inr(v)    { return '₹\u00A0'+Number(v).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function showToast(m,ms=3500){ const t=document.getElementById('toast'); t.innerHTML=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),ms); }
+
+/* ── COLLECT ─────────────────────────────────────────────────── */
+function collect(ref) {
+  const ps = document.querySelector('input[name="park_status"]:checked')?.value||'';
+  return {
+    ref_id: ref, submitted_at: new Date().toISOString(),
+    project_name: selectedProject || 'Stellar',
+    no_of_applicants: numApp,
+    applicant_1_name: g('a1').trim(),
+    applicant_2_name: numApp>=2 ? g('a2').trim() : '',
+    applicant_3_name: numApp>=3 ? g('a3').trim() : '',
+    applicant_4_name: numApp>=4 ? g('a4').trim() : '',
+    agreement_value:  parseFloat(g('agr')),
+    parking_status:   ps,
+    parking_type:     ps === 'Not Required' ? '' : (document.querySelector('input[name="park_type"]:checked')?.value || ''),
+    aadhaar_number:   g('aadhaar_no').trim(),
+    flat_no:  g('flat').trim(),  floor: g('floor').trim(),
+    address:  g('addr').trim(),
+    pan_number:               g('pan').trim(),
+    contact_number:           cleanMob(g('mob')),
+    email:                    g('email').trim(),
+    bank_account_holder_name: g('bname').trim(),
+    bank_account_number:      g('accno').trim(),
+    ifsc_code: g('ifsc').trim(), bank_name: g('bnk'), bank_branch: g('branch').trim(),
+    deal_notes: g('deal_notes').trim(),
+    signature_type: sigType,
+    signature_data_url: sigType==='digital' ? sigPad.toDataURL('image/png') : null,
+    aadhaar_data_url: aadhaarDataUrl,
+    pan_card_data_url: panDataUrl,
+    date_filled: g('dt'),
+  };
+}
+
+/* ── PDF ─────────────────────────────────────────────────────── */
+async function buildPDF(d) {
+  const {jsPDF} = window.jspdf;
+  const doc = new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  const mL=18, W=210, cW=W-mL-mL;
+  let y=20;
+
+  /* PDF-safe helpers — Helvetica lacks ₹, █, • glyphs */
+  const pInr = v => 'Rs. '+Number(v).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const pPan = p => p?.length>=4 ? 'XXXXXX'+p.slice(-4) : 'XXXXXXXXXX';
+  const pAcc = a => a?.length>=4 ? '*'.repeat(Math.max(0,a.length-4))+a.slice(-4) : '**********';
+
+  const hdr = t => {
+    doc.setFillColor(27,47,85); doc.rect(mL,y,cW,8,'F');
+    doc.setTextColor(255,255,255); doc.setFontSize(9); doc.setFont('helvetica','bold');
+    doc.text(t,mL+3,y+5.5); y+=12;
+    doc.setTextColor(27,47,85); doc.setFont('helvetica','normal');
+  };
+  const row = (k,v,bold=false) => {
+    doc.setFontSize(8.5); doc.setFont('helvetica','bold'); doc.setTextColor(107,114,128);
+    doc.text(k,mL,y);
+    doc.setFont('helvetica',bold?'bold':'normal'); doc.setTextColor(17,24,39);
+    const ls=doc.splitTextToSize(String(v||'-'),cW-52); doc.text(ls,mL+52,y); y+=ls.length*5.5;
+  };
+  const ck = (n=20) => { if(y+n>275){doc.addPage();y=18;}};
+
+  // ── Header ──
+  doc.setFillColor(27,47,85); doc.rect(0,0,210,30,'F');
+  doc.setFillColor(184,151,58); doc.rect(0,28,210,2,'F');
+  doc.setTextColor(255,255,255); doc.setFontSize(16); doc.setFont('helvetica','bold');
+  doc.text('KONNARK ' + (d.project_name || 'STELLAR').toUpperCase(), 105, 12, {align:'center'});
+  doc.setFontSize(9); doc.setFont('helvetica','normal');
+  doc.text('Details for Registration Procedure',105,20,{align:'center'});
+  doc.setFontSize(7.5); doc.setTextColor(184,151,58);
+  doc.text('Ref: '+d.ref_id, mL, 26);
+  doc.text(new Date(d.submitted_at).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})+' IST', W-mL, 26, {align:'right'});
+  y=38;
+
+  // ── Note banners ──
+  doc.setFillColor(251,247,237); doc.rect(mL,y,cW,8,'F');
+  doc.setDrawColor(184,151,58); doc.rect(mL,y,3,8,'F'); doc.rect(mL,y,cW,8,'S');
+  doc.setFontSize(7.5); doc.setFont('helvetica','bolditalic'); doc.setTextColor(122,92,0);
+  doc.text('Note: All applicants must be present at time of Registration. (Details to be filled in Agreement)',mL+5,y+5.4);
+  y+=10;
+  doc.setFillColor(255,253,245); doc.rect(mL,y,cW,7,'F');
+  doc.setFillColor(184,151,58); doc.rect(mL,y,3,7,'F');
+  doc.setFontSize(7.2); doc.setFont('helvetica','bold'); doc.setTextColor(122,92,0);
+  doc.text('Name must be filled per PAN Card only, as per order by registration authority officer.',mL+6,y+4.8);
+  y+=13;
+
+  // ── APPLICANTS ──
+  hdr('APPLICANTS');
+  row('1st Applicant', d.applicant_1_name, true);
+  if(d.applicant_2_name) row('2nd Applicant', d.applicant_2_name, true);
+  if(d.applicant_3_name) row('3rd Applicant', d.applicant_3_name, true);
+  if(d.applicant_4_name) row('4th Applicant', d.applicant_4_name, true);
+  y+=4;
+
+  // ── PROPERTY ──
+  ck(50); hdr('PROPERTY');
+  row('Agreement Value', pInr(d.agreement_value));
+  const parkLabel = d.parking_status === 'Not Required'
+    ? 'Not Required'
+    : `${d.parking_status}${d.parking_type ? ' — '+d.parking_type : ''}`;
+  row('Parking', parkLabel);
+  row('Flat No.', d.flat_no);
+  row('Floor', d.floor);
+  row('Address', d.address);
+  y+=4;
+
+  // ── CONTACT ──
+  ck(40); hdr('CONTACT');
+  row('PAN Card No.', d.pan_number);
+  row('Aadhaar No.', d.aadhaar_number);
+  row('Contact No.', d.contact_number);
+  row('Email', d.email);
+  y+=4;
+
+  // ── BANK DETAILS ──
+  ck(50); hdr('BANK DETAILS');
+  row('Account Holder', d.bank_account_holder_name);
+  row('Account Number', d.bank_account_number);
+  row('IFSC Code', d.ifsc_code);
+  row('Bank Name', d.bank_name);
+  row('Branch', d.bank_branch);
+  y+=4;
+
+  // ── DEAL NOTES (if provided) ──
+  if (d.deal_notes) {
+    ck(30); hdr('DEAL NOTES');
+    doc.setFontSize(8.5); doc.setFont('helvetica','normal'); doc.setTextColor(17,24,39);
+    const nl = doc.splitTextToSize(d.deal_notes, cW);
+    doc.text(nl, mL, y); y += nl.length * 5.5 + 4;
+  }
+
+  // ── SIGNATURE & DECLARATION ──
+  ck(58); hdr('SIGNATURE & DECLARATION');
+  doc.setFontSize(8); doc.setFont('helvetica','italic'); doc.setTextColor(107,114,128);
+  const dl = doc.splitTextToSize(`I confirm that the details above are accurate and consent to their use for property registration purposes by Konnark ${d.project_name || 'Stellar'}.`,cW);
+  doc.text(dl,mL,y); y+=dl.length*5+5;
+
+  const sigY = y;
+  if (d.signature_type === 'digital' && d.signature_data_url) {
+    try{ doc.addImage(d.signature_data_url,'PNG',mL,sigY,68,26); }catch(e){}
+  } else {
+    // empty box for manual signature
+    doc.setDrawColor(200,200,200); doc.setLineWidth(0.3);
+    doc.rect(mL, sigY, 68, 26);
+    doc.setFontSize(7); doc.setTextColor(180,180,180); doc.setFont('helvetica','italic');
+    doc.text('Sign here',mL+34,sigY+14,{align:'center'});
+  }
+  doc.setFont('helvetica','normal'); doc.setTextColor(17,24,39); doc.setFontSize(8.5);
+  doc.text('Date: '+d.date_filled, mL+78, sigY+13);
+  doc.setDrawColor(17,24,39); doc.setLineWidth(0.5);
+  doc.line(mL, sigY+28, mL+68, sigY+28);
+  doc.setFontSize(7.5); doc.setTextColor(107,114,128);
+  const sigLabel = d.signature_type==='digital' ? "Customer's Signature" : "Customer's Signature (to be signed)";
+  doc.text(sigLabel, mL, sigY+33);
+
+  // ── Page footers ──
+  const pg = doc.internal.getNumberOfPages();
+  for(let i=1;i<=pg;i++){
+    doc.setPage(i); doc.setFontSize(7); doc.setTextColor(180,180,180); doc.setFont('helvetica','normal');
+    doc.text(
+      `Page ${i} of ${pg}  |  Konnark ${d.project_name || 'Stellar'} Registration  |  ${new Date(d.submitted_at).toISOString()}`,
+      105, 290, {align:'center'});
+  }
+
+  // ── AADHAAR PAGE ──
+  if (d.aadhaar_data_url) {
+    doc.addPage();
+    doc.setFillColor(27,47,85); doc.rect(0,0,210,16,'F');
+    doc.setTextColor(255,255,255); doc.setFontSize(10); doc.setFont('helvetica','bold');
+    doc.text('AADHAAR CARD — '+d.applicant_1_name, 105, 10.5, {align:'center'});
+    doc.setFontSize(7); doc.setTextColor(180,180,180); doc.setFont('helvetica','normal');
+    doc.text('Ref: '+d.ref_id, 105, 293, {align:'center'});
+    try{
+      const imgProps = doc.getImageProperties(d.aadhaar_data_url);
+      const aspect   = imgProps.width/imgProps.height;
+      const maxW=174, maxH=240;
+      let iW=maxW, iH=maxW/aspect;
+      if(iH>maxH){iH=maxH; iW=maxH*aspect;}
+      doc.addImage(d.aadhaar_data_url,'JPEG',(210-iW)/2,24,iW,iH);
+    }catch(e){}
+  }
+
+  // ── PAN CARD PAGE ──
+  if (d.pan_card_data_url) {
+    doc.addPage();
+    doc.setFillColor(27,47,85); doc.rect(0,0,210,16,'F');
+    doc.setTextColor(255,255,255); doc.setFontSize(10); doc.setFont('helvetica','bold');
+    doc.text('PAN CARD — '+d.applicant_1_name, 105, 10.5, {align:'center'});
+    doc.setFontSize(7); doc.setTextColor(180,180,180); doc.setFont('helvetica','normal');
+    doc.text('Ref: '+d.ref_id, 105, 293, {align:'center'});
+    try{
+      const imgProps = doc.getImageProperties(d.pan_card_data_url);
+      const aspect   = imgProps.width/imgProps.height;
+      const maxW=174, maxH=240;
+      let iW=maxW, iH=maxW/aspect;
+      if(iH>maxH){iH=maxH; iW=maxH*aspect;}
+      doc.addImage(d.pan_card_data_url,'JPEG',(210-iW)/2,24,iW,iH);
+    }catch(e){}
+  }
+
+  return doc;
+}
+
+/* ── EMAIL ───────────────────────────────────────────────────── */
+async function doEmail(d, b64, ref) {
+  if (CFG.EMAILJS_PUBLIC_KEY==='YOUR_EMAILJS_PUBLIC_KEY') { showToast('EmailJS not configured — email skipped.'); return; }
+  const names=[d.applicant_1_name,d.applicant_2_name,d.applicant_3_name,d.applicant_4_name].filter(Boolean).join(', ');
+  await emailjs.send(CFG.EMAILJS_SERVICE_ID, CFG.EMAILJS_TEMPLATE_ID, {
+    to_name:d.applicant_1_name, to_email:d.email, admin_email:CFG.ADMIN_EMAIL,
+    ref_id:ref, applicant_names:names, flat_no:d.flat_no, floor:d.floor,
+    agreement_value:inr(d.agreement_value), parking_value:d.parking_status,
+    submitted_at:new Date(d.submitted_at).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'}),
+    pdf_attachment:b64,
+  });
+}
+
+/* ── SHEETS ──────────────────────────────────────────────────── */
+async function doSheets(d, ref) {
+  if (!CFG.GOOGLE_SCRIPT_URL) return;
+  const payload={...d, ref_id:ref};
+  delete payload.signature_data_url; delete payload.aadhaar_data_url; delete payload.pan_card_data_url;
+  await fetch(CFG.GOOGLE_SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+}
+
+/* ── CONFIRM SCREEN ──────────────────────────────────────────── */
+function showConfirm(d, ref) {
+  document.getElementById('formWrap').style.display='none';
+  const sc=document.getElementById('confirmScreen');
+  sc.style.display='block';
+  document.getElementById('refId').textContent=ref;
+
+  const names=[d.applicant_1_name,d.applicant_2_name,d.applicant_3_name,d.applicant_4_name].filter(Boolean).join(' · ');
+  const rows=[
+    ['Applicant(s)', names],
+    ['Flat / Floor',  `${d.flat_no} — Floor ${d.floor}`],
+    ['Agreement Value', inr(d.agreement_value)],
+    ['Parking', d.parking_status === 'Not Required' ? 'Not Required' : `${d.parking_status}${d.parking_type ? ' — '+d.parking_type : ''}`],
+    ['PAN',     `<span class="mono">${maskPan(d.pan_number)}</span>`],
+    ['Aadhaar', `<span class="mono">XXXX XXXX ${d.aadhaar_number?.slice(-4)||'****'}</span>`],
+    ['Contact', d.contact_number],
+    ['Email',   d.email],
+    ['Account No.', `<span class="mono">${maskAcc(d.bank_account_number)}</span>`],
+    ['Bank',    `${d.bank_name} — ${d.bank_branch}`],
+    d.deal_notes ? ['Deal Notes', d.deal_notes] : null,
+    ['Signature', d.signature_type==='digital' ? 'Digital (drawn)' : 'Manual (blank in PDF)'],
+    ['Documents', [aadhaarDataUrl?'Aadhaar':'', panDataUrl?'PAN Card':''].filter(Boolean).join(', ')||'None attached'],
+    ['Submitted', new Date(d.submitted_at).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})+' IST'],
+  ].filter(Boolean);
+
+  document.getElementById('confirmRows').innerHTML =
+    rows.map(([k,v])=>`<div class="ct-row"><span class="ct-k">${k}</span><span class="ct-v">${v}</span></div>`).join('');
+  sc.scrollIntoView({behavior:'smooth'});
+}
+
+/* ── STORED PDF ──────────────────────────────────────────────── */
+let lastDoc=null, lastRef=null;
+
+/* ── SUBMIT ──────────────────────────────────────────────────── */
+document.getElementById('regForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  let ok=true;
+  Object.keys(V).forEach(fw=>{
+    const el=document.getElementById(fw);
+    if (!el||el.classList.contains('hidden')) return;
+    if (fw==='fw-sig' && sigType==='manual') return;
+    if (!vf(fw)) ok=false;
+  });
+  if (!document.getElementById('consent').checked) {
+    document.getElementById('e-consent').style.display='flex'; ok=false;
+  }
+  if (!ok) {
+    showToast('Please fix the highlighted errors.');
+    document.querySelector('.field-wrap.has-error .err-line')?.scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+
+  const ref  = refId();
+  const data = collect(ref);
+  const ov   = document.getElementById('overlay');
+  const lm   = document.getElementById('loadMsg');
+  ov.classList.add('on');
+
+  try {
+    lm.textContent='Generating PDF';
+    const pdf = await buildPDF(data);
+    const b64 = pdf.output('datauristring').split(',')[1];
+    lastDoc=pdf; lastRef=ref;
+    lm.textContent='Sending confirmation';
+    await doEmail(data, b64, ref);
+    lm.textContent='Saving record';
+    await doSheets(data, ref);
+    ov.classList.remove('on');
+    showConfirm(data, ref);
+    showToast('Registration submitted successfully.');
+  } catch(err) {
+    ov.classList.remove('on');
+    showToast('Submission failed. Please try again.');
+  }
+});
+
+/* ── DOWNLOAD ────────────────────────────────────────────────── */
+document.getElementById('dlBtn').addEventListener('click', ()=>{
+  if (lastDoc && lastRef) lastDoc.save(`${lastRef}.pdf`);
+});
+
+/* ── NEW ENTRY ───────────────────────────────────────────────── */
+document.getElementById('newBtn').addEventListener('click', ()=>{
+  document.getElementById('confirmScreen').style.display='none';
+  document.getElementById('formWrap').style.display='block';
+  document.getElementById('regForm').reset();
+  numApp=0; sigType='';
+  for(let i=2;i<=4;i++){
+    document.getElementById(`fw-a${i}`).classList.add('hidden');
+    document.getElementById(`a${i}`).required=false;
+  }
+  sigPad.clear(); sigOverlay.style.opacity=''; sigBox.classList.remove('active','filled','invalid');
+  document.getElementById('sig-digital-section').classList.add('hidden');
+  document.getElementById('sig-manual-section').classList.add('hidden');
+  aadhaarDataUrl=null; panDataUrl=null;
+  ['aadhaarCard','panCardImg'].forEach(id=>document.getElementById(id).classList.remove('has-file'));
+  document.getElementById('aadhaarImg').src=''; document.getElementById('aadhaar_file').value='';
+  document.getElementById('panImg').src='';     document.getElementById('pan_file').value='';
+  document.getElementById('aadhaarTitle').textContent='Upload Aadhaar Card';
+  document.getElementById('panTitle').textContent='Upload PAN Card';
+  document.getElementById('dt').value=new Date().toISOString().slice(0,10);
+  document.querySelectorAll('.field-wrap').forEach(fw=>{
+    fw.classList.remove('touched','has-error');
+    fw.querySelectorAll('input,textarea,select').forEach(el=>el.classList.remove('valid','invalid'));
+  });
+  document.getElementById('e-consent').style.display='none';
+  document.getElementById('submitBtn').disabled=true;
+  document.getElementById('progressFill').style.width='0%';
+  document.getElementById('progressPct').textContent='0%';
+  updateSteps(); lastDoc=null; lastRef=null;
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* ── HTTPS WARNING ───────────────────────────────────────────── */
+if (location.protocol==='http:' && !['localhost','127.0.0.1'].includes(location.hostname))
+  showToast('Please use HTTPS for secure data handling.', 6000);
+
+/* ── INIT ────────────────────────────────────────────────────── */
+updateState(); updateSteps();
+</script>
+</body>
+</html>
