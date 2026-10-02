@@ -1586,14 +1586,6 @@ async function buildPDF(d) {
   row('Branch', d.bank_branch);
   y+=4;
 
-  // ── DEAL NOTES (if provided) ──
-  if (d.deal_notes) {
-    ck(30); hdr('DEAL NOTES');
-    doc.setFontSize(8.5); doc.setFont('helvetica','normal'); doc.setTextColor(17,24,39);
-    const nl = doc.splitTextToSize(d.deal_notes, cW);
-    doc.text(nl, mL, y); y += nl.length * 5.5 + 4;
-  }
-
   // ── SIGNATURE & DECLARATION ──
   ck(58); hdr('SIGNATURE & DECLARATION');
   doc.setFontSize(8); doc.setFont('helvetica','italic'); doc.setTextColor(107,114,128);
@@ -1604,7 +1596,6 @@ async function buildPDF(d) {
   if (d.signature_type === 'digital' && d.signature_data_url) {
     try{ doc.addImage(d.signature_data_url,'PNG',mL,sigY,68,26); }catch(e){}
   } else {
-    // empty box for manual signature
     doc.setDrawColor(200,200,200); doc.setLineWidth(0.3);
     doc.rect(mL, sigY, 68, 26);
     doc.setFontSize(7); doc.setTextColor(180,180,180); doc.setFont('helvetica','italic');
@@ -1618,7 +1609,53 @@ async function buildPDF(d) {
   const sigLabel = d.signature_type==='digital' ? "Customer's Signature" : "Customer's Signature (to be signed)";
   doc.text(sigLabel, mL, sigY+33);
 
-  // ── Page footers ──
+  // ── DEAL NOTES PAGE (separate page, always after booking form) ──
+  if (d.deal_notes) {
+    doc.addPage();
+
+    // Navy header bar
+    doc.setFillColor(27,47,85); doc.rect(0,0,210,30,'F');
+    doc.setFillColor(184,151,58); doc.rect(0,28,210,2,'F');
+    doc.setTextColor(255,255,255); doc.setFontSize(14); doc.setFont('helvetica','bold');
+    doc.text('KONNARK '+( d.project_name||'STELLAR').toUpperCase(), 105, 11, {align:'center'});
+    doc.setFontSize(9); doc.setFont('helvetica','normal');
+    doc.text('Deal Notes', 105, 20, {align:'center'});
+    doc.setFontSize(7.5); doc.setTextColor(184,151,58);
+    doc.text('Ref: '+d.ref_id, mL, 26);
+    doc.text(new Date(d.submitted_at).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})+' IST', W-mL, 26, {align:'right'});
+
+    // Section subheader
+    let ny = 42;
+    doc.setFillColor(245,245,243); doc.rect(mL, ny, cW, 8, 'F');
+    doc.setDrawColor(184,151,58); doc.rect(mL,ny,3,8,'F');
+    doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.setTextColor(122,92,0);
+    doc.text('Notes entered by sales representative / applicant', mL+6, ny+5.4);
+    ny += 14;
+
+    // Notes content
+    doc.setFontSize(10); doc.setFont('helvetica','normal'); doc.setTextColor(17,24,39);
+    const noteLines = doc.splitTextToSize(d.deal_notes, cW);
+    doc.text(noteLines, mL, ny);
+    ny += noteLines.length * 6 + 10;
+
+    // Horizontal rule
+    doc.setDrawColor(220,220,220); doc.setLineWidth(0.3);
+    doc.line(mL, ny, W-mL, ny);
+    ny += 12;
+
+    // Blank lined area (for additional manual notes at time of meeting)
+    doc.setFontSize(8); doc.setFont('helvetica','italic'); doc.setTextColor(160,160,160);
+    doc.text('Additional notes (to be filled at meeting):', mL, ny);
+    ny += 8;
+    doc.setDrawColor(210,210,210); doc.setLineWidth(0.3);
+    const lineSpacing = 10;
+    const linesCount  = Math.floor((260 - ny) / lineSpacing);
+    for (let li=0; li<linesCount; li++) {
+      doc.line(mL, ny + li*lineSpacing, W-mL, ny + li*lineSpacing);
+    }
+  }
+
+  // ── Page footers (applied to ALL pages generated so far) ──
   const pg = doc.internal.getNumberOfPages();
   for(let i=1;i<=pg;i++){
     doc.setPage(i); doc.setFontSize(7); doc.setTextColor(180,180,180); doc.setFont('helvetica','normal');
