@@ -1731,42 +1731,6 @@ async function buildPDF(d) {
   const pInr = v => 'Rs. '+Number(v).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
   const pPan = p => p?.length>=4 ? 'XXXXXX'+p.slice(-4) : 'XXXXXXXXXX';
   const pAcc = a => a?.length>=4 ? '*'.repeat(Math.max(0,a.length-4))+a.slice(-4) : '**********';
-
-  const hdr = t => {
-    doc.setFillColor(27,47,85); doc.rect(mL,y,cW,8,'F');
-    doc.setTextColor(255,255,255); doc.setFontSize(9); doc.setFont('helvetica','bold');
-    doc.text(t,mL+3,y+5.5); y+=12;
-    doc.setTextColor(27,47,85); doc.setFont('helvetica','normal');
-  };
-  const row = (k, v, bold=false) => {
-    const keyWidth = 62;
-    const valWidth = cW - keyWidth - 4;
-    const valX = mL + keyWidth + 4;
-
-    doc.setFontSize(8.5);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(107, 114, 128);
-    const kLines = doc.splitTextToSize(String(k || ''), keyWidth);
-
-    doc.setFont('helvetica', bold ? 'bold' : 'normal');
-    doc.setTextColor(17, 24, 39);
-    const vLines = doc.splitTextToSize(String(v || '-'), valWidth);
-
-    const lineH = 5.2;
-    const totalLines = Math.max(kLines.length, vLines.length);
-
-    // Print key
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(107, 114, 128);
-    doc.text(kLines, mL, y);
-
-    // Print value
-    doc.setFont('helvetica', bold ? 'bold' : 'normal');
-    doc.setTextColor(17, 24, 39);
-    doc.text(vLines, valX, y);
-
-    y += totalLines * lineH + 1.2;
-  };
   const ck = (n=20) => { if(y+n>275){doc.addPage();y=18;}};
 
   // ── Header ──
