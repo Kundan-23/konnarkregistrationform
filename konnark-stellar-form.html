@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
   <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
@@ -638,49 +640,115 @@ input[type="file"] { display: none; }
 
     <!-- Applicant 2 -->
     <div class="field-wrap hidden" id="fw-a2">
-      <div class="applicant-row">
-        <div class="a-badge secondary">2</div>
-        <div class="fl" style="flex:1">
-          <input type="text" id="a2" name="applicant_2_name" placeholder=" " autocomplete="off" />
-          <label for="a2">Name of 2nd Applicant <span style="color:var(--red)">*</span></label>
-          <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+      <div class="applicant-card-group" style="background:var(--line-2);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-top:8px;">
+        <div class="applicant-row" style="margin-bottom:12px;">
+          <div class="a-badge secondary">2</div>
+          <div class="fl" style="flex:1">
+            <input type="text" id="a2" name="applicant_2_name" placeholder=" " autocomplete="off" />
+            <label for="a2">Name of 2nd Applicant <span style="color:var(--red)">*</span></label>
+            <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          </div>
         </div>
-      </div>
-      <div class="err-line" id="e-a2" style="padding-left:36px">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg>
-        Required — capital letters, single spaces only.
+        <div class="err-line" id="e-a2" style="padding-left:36px;margin-bottom:12px;">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg>
+          Required — capital letters, single spaces only.
+        </div>
+        <div class="g2" style="margin-bottom:12px;">
+          <div class="fl">
+            <input type="text" id="a2_pan" name="applicant_2_pan" placeholder=" " maxlength="10" autocomplete="off" spellcheck="false" />
+            <label for="a2_pan">PAN Card Number <span class="optional-tag">Optional</span></label>
+          </div>
+          <div class="fl">
+            <input type="text" id="a2_aadhaar" name="applicant_2_aadhaar" placeholder=" " maxlength="12" inputmode="numeric" autocomplete="off" spellcheck="false" />
+            <label for="a2_aadhaar">Aadhaar Number <span class="optional-tag">Optional</span></label>
+          </div>
+        </div>
+        <div class="g2">
+          <div class="fl">
+            <input type="tel" id="a2_mob" name="applicant_2_mobile" placeholder=" " inputmode="tel" />
+            <label for="a2_mob">Contact Number <span class="optional-tag">Optional</span></label>
+          </div>
+          <div class="fl">
+            <input type="email" id="a2_email" name="applicant_2_email" placeholder=" " inputmode="email" />
+            <label for="a2_email">Email Address <span class="optional-tag">Optional</span></label>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Applicant 3 -->
     <div class="field-wrap hidden" id="fw-a3">
-      <div class="applicant-row">
-        <div class="a-badge secondary">3</div>
-        <div class="fl" style="flex:1">
-          <input type="text" id="a3" name="applicant_3_name" placeholder=" " autocomplete="off" />
-          <label for="a3">Name of 3rd Applicant <span style="color:var(--red)">*</span></label>
-          <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+      <div class="applicant-card-group" style="background:var(--line-2);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-top:8px;">
+        <div class="applicant-row" style="margin-bottom:12px;">
+          <div class="a-badge secondary">3</div>
+          <div class="fl" style="flex:1">
+            <input type="text" id="a3" name="applicant_3_name" placeholder=" " autocomplete="off" />
+            <label for="a3">Name of 3rd Applicant <span style="color:var(--red)">*</span></label>
+            <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          </div>
         </div>
-      </div>
-      <div class="err-line" id="e-a3" style="padding-left:36px">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg>
-        Required — capital letters, single spaces only.
+        <div class="err-line" id="e-a3" style="padding-left:36px;margin-bottom:12px;">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg>
+          Required — capital letters, single spaces only.
+        </div>
+        <div class="g2" style="margin-bottom:12px;">
+          <div class="fl">
+            <input type="text" id="a3_pan" name="applicant_3_pan" placeholder=" " maxlength="10" autocomplete="off" spellcheck="false" />
+            <label for="a3_pan">PAN Card Number <span class="optional-tag">Optional</span></label>
+          </div>
+          <div class="fl">
+            <input type="text" id="a3_aadhaar" name="applicant_3_aadhaar" placeholder=" " maxlength="12" inputmode="numeric" autocomplete="off" spellcheck="false" />
+            <label for="a3_aadhaar">Aadhaar Number <span class="optional-tag">Optional</span></label>
+          </div>
+        </div>
+        <div class="g2">
+          <div class="fl">
+            <input type="tel" id="a3_mob" name="applicant_3_mobile" placeholder=" " inputmode="tel" />
+            <label for="a3_mob">Contact Number <span class="optional-tag">Optional</span></label>
+          </div>
+          <div class="fl">
+            <input type="email" id="a3_email" name="applicant_3_email" placeholder=" " inputmode="email" />
+            <label for="a3_email">Email Address <span class="optional-tag">Optional</span></label>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Applicant 4 -->
     <div class="field-wrap hidden" id="fw-a4">
-      <div class="applicant-row">
-        <div class="a-badge secondary">4</div>
-        <div class="fl" style="flex:1">
-          <input type="text" id="a4" name="applicant_4_name" placeholder=" " autocomplete="off" />
-          <label for="a4">Name of 4th Applicant <span style="color:var(--red)">*</span></label>
-          <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+      <div class="applicant-card-group" style="background:var(--line-2);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-top:8px;">
+        <div class="applicant-row" style="margin-bottom:12px;">
+          <div class="a-badge secondary">4</div>
+          <div class="fl" style="flex:1">
+            <input type="text" id="a4" name="applicant_4_name" placeholder=" " autocomplete="off" />
+            <label for="a4">Name of 4th Applicant <span style="color:var(--red)">*</span></label>
+            <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          </div>
         </div>
-      </div>
-      <div class="err-line" id="e-a4" style="padding-left:36px">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg>
-        Required — capital letters, single spaces only.
+        <div class="err-line" id="e-a4" style="padding-left:36px;margin-bottom:12px;">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg>
+          Required — capital letters, single spaces only.
+        </div>
+        <div class="g2" style="margin-bottom:12px;">
+          <div class="fl">
+            <input type="text" id="a4_pan" name="applicant_4_pan" placeholder=" " maxlength="10" autocomplete="off" spellcheck="false" />
+            <label for="a4_pan">PAN Card Number <span class="optional-tag">Optional</span></label>
+          </div>
+          <div class="fl">
+            <input type="text" id="a4_aadhaar" name="applicant_4_aadhaar" placeholder=" " maxlength="12" inputmode="numeric" autocomplete="off" spellcheck="false" />
+            <label for="a4_aadhaar">Aadhaar Number <span class="optional-tag">Optional</span></label>
+          </div>
+        </div>
+        <div class="g2">
+          <div class="fl">
+            <input type="tel" id="a4_mob" name="applicant_4_mobile" placeholder=" " inputmode="tel" />
+            <label for="a4_mob">Contact Number <span class="optional-tag">Optional</span></label>
+          </div>
+          <div class="fl">
+            <input type="email" id="a4_email" name="applicant_4_email" placeholder=" " inputmode="email" />
+            <label for="a4_email">Email Address <span class="optional-tag">Optional</span></label>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -922,24 +990,32 @@ input[type="file"] { display: none; }
   </div>
   <div class="section-body">
 
-    <!-- Aadhaar Card -->
-    <div>
-      <p class="sub-label" style="margin-bottom:8px">Aadhaar Card</p>
-      <div class="upload-card" id="aadhaarCard">
-        <input type="file" id="aadhaar_file" accept="image/jpeg,image/png,image/webp,image/heic" />
-        <label class="upload-trigger" for="aadhaar_file">
-          <div class="upload-icon" id="aadhaarIcon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          </div>
-          <div class="upload-text">
-            <h4 id="aadhaarTitle">Upload Aadhaar Card</h4>
-            <p>JPG, PNG or WEBP — image only</p>
-          </div>
-        </label>
-        <div class="upload-preview" id="aadhaarPreview">
-          <img id="aadhaarImg" src="" alt="Aadhaar preview" />
+    <!-- Aadhaar Card Front -->
+    <div style="margin-bottom:18px;">
+      <p class="sub-label" style="margin-bottom:8px">Aadhaar Card — Front Side</p>
+      <div class="upload-card" id="aadhaarFrontCard">
+        <input type="file" id="aadhaar_front_file" accept="image/jpeg,image/png,image/webp,image/heic,application/pdf" />
+        <input type="file" id="aadhaar_front_cam" accept="image/*" capture="environment" />
+        <div class="upload-trigger-wrap" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--surface);">
+          <label class="upload-trigger" for="aadhaar_front_file" style="flex:1;display:flex;align-items:center;gap:12px;cursor:pointer;margin:0;">
+            <div class="upload-icon" id="aadhaarFrontIcon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <div class="upload-text">
+              <h4 id="aadhaarFrontTitle">Upload Aadhaar Front</h4>
+              <p>Image (JPG, PNG) or PDF document</p>
+            </div>
+          </label>
+          <button type="button" class="btn-cam" onclick="document.getElementById('aadhaar_front_cam').click()" title="Capture photo with camera" style="display:flex;align-items:center;gap:6px;padding:8px 14px;background:var(--line-2);border:1px solid var(--line);border-radius:var(--r-sm);font-size:12px;font-weight:600;color:var(--ink-2);cursor:pointer;flex-shrink:0;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            Camera
+          </button>
+        </div>
+        <div class="upload-preview" id="aadhaarFrontPreview">
+          <img id="aadhaarFrontImg" src="" alt="Aadhaar Front preview" />
+          <div class="pdf-file-badge" id="aadhaarFrontPdfBadge" style="display:none;padding:12px;background:var(--line-2);border-radius:var(--r-sm);font-size:12px;font-weight:600;color:var(--navy);text-align:center;">📄 PDF Document Selected</div>
           <div class="upload-preview-actions">
-            <button type="button" class="btn-remove-file" id="removeAadhaar">
+            <button type="button" class="btn-remove-file" id="removeAadhaarFront">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
               Remove
             </button>
@@ -948,22 +1024,64 @@ input[type="file"] { display: none; }
       </div>
     </div>
 
-    <!-- PAN Card Image -->
+    <!-- Aadhaar Card Back -->
+    <div style="margin-bottom:18px;">
+      <p class="sub-label" style="margin-bottom:8px">Aadhaar Card — Back Side</p>
+      <div class="upload-card" id="aadhaarBackCard">
+        <input type="file" id="aadhaar_back_file" accept="image/jpeg,image/png,image/webp,image/heic,application/pdf" />
+        <input type="file" id="aadhaar_back_cam" accept="image/*" capture="environment" />
+        <div class="upload-trigger-wrap" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--surface);">
+          <label class="upload-trigger" for="aadhaar_back_file" style="flex:1;display:flex;align-items:center;gap:12px;cursor:pointer;margin:0;">
+            <div class="upload-icon" id="aadhaarBackIcon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <div class="upload-text">
+              <h4 id="aadhaarBackTitle">Upload Aadhaar Back</h4>
+              <p>Image (JPG, PNG) or PDF document</p>
+            </div>
+          </label>
+          <button type="button" class="btn-cam" onclick="document.getElementById('aadhaar_back_cam').click()" title="Capture photo with camera" style="display:flex;align-items:center;gap:6px;padding:8px 14px;background:var(--line-2);border:1px solid var(--line);border-radius:var(--r-sm);font-size:12px;font-weight:600;color:var(--ink-2);cursor:pointer;flex-shrink:0;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            Camera
+          </button>
+        </div>
+        <div class="upload-preview" id="aadhaarBackPreview">
+          <img id="aadhaarBackImg" src="" alt="Aadhaar Back preview" />
+          <div class="pdf-file-badge" id="aadhaarBackPdfBadge" style="display:none;padding:12px;background:var(--line-2);border-radius:var(--r-sm);font-size:12px;font-weight:600;color:var(--navy);text-align:center;">📄 PDF Document Selected</div>
+          <div class="upload-preview-actions">
+            <button type="button" class="btn-remove-file" id="removeAadhaarBack">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+              Remove
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAN Card Image / Document -->
     <div>
-      <p class="sub-label" style="margin-bottom:8px">PAN Card Image</p>
+      <p class="sub-label" style="margin-bottom:8px">PAN Card</p>
       <div class="upload-card" id="panCardImg">
-        <input type="file" id="pan_file" accept="image/jpeg,image/png,image/webp,image/heic" />
-        <label class="upload-trigger" for="pan_file">
-          <div class="upload-icon" id="panIcon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          </div>
-          <div class="upload-text">
-            <h4 id="panTitle">Upload PAN Card</h4>
-            <p>JPG, PNG or WEBP — image only</p>
-          </div>
-        </label>
+        <input type="file" id="pan_file" accept="image/jpeg,image/png,image/webp,image/heic,application/pdf" />
+        <input type="file" id="pan_cam" accept="image/*" capture="environment" />
+        <div class="upload-trigger-wrap" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--surface);">
+          <label class="upload-trigger" for="pan_file" style="flex:1;display:flex;align-items:center;gap:12px;cursor:pointer;margin:0;">
+            <div class="upload-icon" id="panIcon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <div class="upload-text">
+              <h4 id="panTitle">Upload PAN Card</h4>
+              <p>Image (JPG, PNG) or PDF document</p>
+            </div>
+          </label>
+          <button type="button" class="btn-cam" onclick="document.getElementById('pan_cam').click()" title="Capture photo with camera" style="display:flex;align-items:center;gap:6px;padding:8px 14px;background:var(--line-2);border:1px solid var(--line);border-radius:var(--r-sm);font-size:12px;font-weight:600;color:var(--ink-2);cursor:pointer;flex-shrink:0;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            Camera
+          </button>
+        </div>
         <div class="upload-preview" id="panPreview">
           <img id="panImg" src="" alt="PAN card preview" />
+          <div class="pdf-file-badge" id="panPdfBadge" style="display:none;padding:12px;background:var(--line-2);border-radius:var(--r-sm);font-size:12px;font-weight:600;color:var(--navy);text-align:center;">📄 PDF Document Selected</div>
           <div class="upload-preview-actions">
             <button type="button" class="btn-remove-file" id="removePan">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
@@ -1258,42 +1376,107 @@ document.querySelectorAll('input[name="num_app"]').forEach(r => {
 });
 
 /* ── FILE UPLOAD HELPERS ────────────────────────────────────── */
-let aadhaarDataUrl = null;
-let panDataUrl     = null;
+let aadhaarFrontDataUrl = null;
+let aadhaarFrontPdfBytes = null;
+let aadhaarBackDataUrl  = null;
+let aadhaarBackPdfBytes = null;
+let panDataUrl          = null;
+let panPdfBytes         = null;
 
-function setupUpload(inputId, cardId, imgId, titleId, iconId, removeId, onSet) {
-  const input  = document.getElementById(inputId);
-  const card   = document.getElementById(cardId);
-  const img    = document.getElementById(imgId);
-  const title  = document.getElementById(titleId);
-  const remove = document.getElementById(removeId);
+function setupUpload(fileInputId, camInputId, cardId, imgId, pdfBadgeId, titleId, removeId, defaultTitle, onSet) {
+  const fileInput = document.getElementById(fileInputId);
+  const camInput  = document.getElementById(camInputId);
+  const card      = document.getElementById(cardId);
+  const img       = document.getElementById(imgId);
+  const pdfBadge  = document.getElementById(pdfBadgeId);
+  const title     = document.getElementById(titleId);
+  const remove    = document.getElementById(removeId);
 
-  input.addEventListener('change', function() {
-    const file = this.files[0];
+  async function handleFile(file) {
     if (!file) return;
-    if (!file.type.startsWith('image/')) { showToast('Please upload an image file (JPG, PNG, WEBP).'); this.value=''; return; }
-    if (file.size > 8*1024*1024) { showToast('File too large — maximum 8 MB.'); this.value=''; return; }
-    const reader = new FileReader();
-    reader.onload = e => {
-      const url = e.target.result;
-      onSet(url);
-      img.src = url;
-      card.classList.add('has-file');
-      title.textContent = file.name;
-    };
-    reader.readAsDataURL(file);
-  });
+    if (file.size > 15 * 1024 * 1024) {
+      showToast('File too large — maximum 15 MB.');
+      return;
+    }
 
-  remove.addEventListener('click', ()=>{
-    onSet(null);
-    img.src=''; input.value='';
-    card.classList.remove('has-file');
-    title.textContent = inputId==='aadhaar_file' ? 'Upload Aadhaar Card' : 'Upload PAN Card';
-  });
+    if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+      const reader = new FileReader();
+      reader.onload = async e => {
+        try {
+          const typedarray = new Uint8Array(e.target.result);
+          // Render 1st page of PDF to image thumbnail using pdf.js
+          const pdfDoc = await pdfjsLib.getDocument({ data: typedarray }).promise;
+          const page = await pdfDoc.getPage(1);
+          const viewport = page.getViewport({ scale: 1.5 });
+          const canvas = document.createElement('canvas');
+          const context = canvas.getContext('2d');
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+          await page.render({ canvasContext: context, viewport: viewport }).promise;
+          const pageDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+
+          onSet(pageDataUrl, typedarray);
+          img.src = pageDataUrl;
+          img.style.display = 'block';
+          if (pdfBadge) pdfBadge.style.display = 'block';
+          card.classList.add('has-file');
+          title.textContent = file.name;
+        } catch (err) {
+          showToast('Could not load PDF document.');
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    } else if (file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const url = e.target.result;
+        onSet(url, null);
+        img.src = url;
+        img.style.display = 'block';
+        if (pdfBadge) pdfBadge.style.display = 'none';
+        card.classList.add('has-file');
+        title.textContent = file.name;
+      };
+      reader.readAsDataURL(file);
+    } else {
+      showToast('Please upload an image (JPG, PNG) or PDF document.');
+    }
+  }
+
+  if (fileInput) fileInput.addEventListener('change', function() { handleFile(this.files[0]); });
+  if (camInput)  camInput.addEventListener('change', function() { handleFile(this.files[0]); });
+
+  if (remove) {
+    remove.addEventListener('click', () => {
+      onSet(null, null);
+      img.src = '';
+      img.style.display = 'none';
+      if (pdfBadge) pdfBadge.style.display = 'none';
+      if (fileInput) fileInput.value = '';
+      if (camInput)  camInput.value  = '';
+      card.classList.remove('has-file');
+      title.textContent = defaultTitle;
+    });
+  }
 }
 
-setupUpload('aadhaar_file','aadhaarCard','aadhaarImg','aadhaarTitle','aadhaarIcon','removeAadhaar', v=>{ aadhaarDataUrl=v; });
-setupUpload('pan_file','panCardImg','panImg','panTitle','panIcon','removePan', v=>{ panDataUrl=v; });
+setupUpload(
+  'aadhaar_front_file', 'aadhaar_front_cam', 'aadhaarFrontCard', 'aadhaarFrontImg',
+  'aadhaarFrontPdfBadge', 'aadhaarFrontTitle', 'removeAadhaarFront', 'Upload Aadhaar Front',
+  (imgUrl, pdfBytes) => { aadhaarFrontDataUrl = imgUrl; aadhaarFrontPdfBytes = pdfBytes; }
+);
+
+setupUpload(
+  'aadhaar_back_file', 'aadhaar_back_cam', 'aadhaarBackCard', 'aadhaarBackImg',
+  'aadhaarBackPdfBadge', 'aadhaarBackTitle', 'removeAadhaarBack', 'Upload Aadhaar Back',
+  (imgUrl, pdfBytes) => { aadhaarBackDataUrl = imgUrl; aadhaarBackPdfBytes = pdfBytes; }
+);
+
+setupUpload(
+  'pan_file', 'pan_cam', 'panCardImg', 'panImg',
+  'panPdfBadge', 'panTitle', 'removePan', 'Upload PAN Card',
+  (imgUrl, pdfBytes) => { panDataUrl = imgUrl; panPdfBytes = pdfBytes; }
+);
 
 const name_re    = /^[A-Z]+( [A-Z]+)*$/;
 const pan_re     = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
@@ -1365,19 +1548,27 @@ function vf(fwId) {
     try{this.setSelectionRange(p,p);}catch(e){}
   });
 });
-['pan','ifsc'].forEach(id => {
-  document.getElementById(id).addEventListener('input', function() {
-    const p=this.selectionStart;
-    this.value=this.value.toUpperCase();
-    try{this.setSelectionRange(p,p);}catch(e){}
-  });
+['pan','ifsc','a2_pan','a3_pan','a4_pan'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) {
+    el.addEventListener('input', function() {
+      const p = this.selectionStart;
+      this.value = this.value.toUpperCase();
+      try{ this.setSelectionRange(p,p); }catch(e){}
+    });
+  }
 });
 document.getElementById('accno').addEventListener('input', function() {
   this.value=this.value.replace(/[^\d]/g,'');
 });
-// Aadhaar: digits only
-document.getElementById('aadhaar_no').addEventListener('input', function() {
-  this.value=this.value.replace(/[^\d]/g,'');
+// Aadhaar & mobile: digits only
+['aadhaar_no','a2_aadhaar','a3_aadhaar','a4_aadhaar','a2_mob','a3_mob','a4_mob'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) {
+    el.addEventListener('input', function() {
+      this.value = this.value.replace(/[^\d]/g,'');
+    });
+  }
 });
 
 /* ── BLUR / INPUT WIRING ─────────────────────────────────────── */
@@ -1490,8 +1681,20 @@ function collect(ref) {
     no_of_applicants: numApp,
     applicant_1_name: g('a1').trim(),
     applicant_2_name: numApp>=2 ? g('a2').trim() : '',
+    applicant_2_pan: numApp>=2 ? g('a2_pan').trim() : '',
+    applicant_2_aadhaar: numApp>=2 ? g('a2_aadhaar').trim() : '',
+    applicant_2_mobile: numApp>=2 ? g('a2_mob').trim() : '',
+    applicant_2_email: numApp>=2 ? g('a2_email').trim() : '',
     applicant_3_name: numApp>=3 ? g('a3').trim() : '',
+    applicant_3_pan: numApp>=3 ? g('a3_pan').trim() : '',
+    applicant_3_aadhaar: numApp>=3 ? g('a3_aadhaar').trim() : '',
+    applicant_3_mobile: numApp>=3 ? g('a3_mob').trim() : '',
+    applicant_3_email: numApp>=3 ? g('a3_email').trim() : '',
     applicant_4_name: numApp>=4 ? g('a4').trim() : '',
+    applicant_4_pan: numApp>=4 ? g('a4_pan').trim() : '',
+    applicant_4_aadhaar: numApp>=4 ? g('a4_aadhaar').trim() : '',
+    applicant_4_mobile: numApp>=4 ? g('a4_mob').trim() : '',
+    applicant_4_email: numApp>=4 ? g('a4_email').trim() : '',
     agreement_value:  parseFloat(g('agr')),
     parking_status:   ps,
     parking_type:     ps === 'Not Required' ? '' : (document.querySelector('input[name="park_type"]:checked')?.value || ''),
@@ -1507,8 +1710,12 @@ function collect(ref) {
     deal_notes: g('deal_notes').trim(),
     signature_type: sigType,
     signature_data_url: sigType==='digital' ? sigPad.toDataURL('image/png') : null,
-    aadhaar_data_url: aadhaarDataUrl,
+    aadhaar_front_data_url: aadhaarFrontDataUrl,
+    aadhaar_front_pdf_bytes: aadhaarFrontPdfBytes,
+    aadhaar_back_data_url: aadhaarBackDataUrl,
+    aadhaar_back_pdf_bytes: aadhaarBackPdfBytes,
     pan_card_data_url: panDataUrl,
+    pan_pdf_bytes: panPdfBytes,
     date_filled: g('dt'),
   };
 }
@@ -1589,9 +1796,20 @@ async function buildPDF(d) {
   // ── APPLICANTS ──
   hdr('APPLICANTS');
   row('1st Applicant', d.applicant_1_name, true);
-  if(d.applicant_2_name) row('2nd Applicant', d.applicant_2_name, true);
-  if(d.applicant_3_name) row('3rd Applicant', d.applicant_3_name, true);
-  if(d.applicant_4_name) row('4th Applicant', d.applicant_4_name, true);
+
+  for (let i = 2; i <= 4; i++) {
+    const name = d[`applicant_${i}_name`];
+    if (!name) continue;
+    row(`${i===2?'2nd':i===3?'3rd':'4th'} Applicant`, name, true);
+    const extras = [];
+    if (d[`applicant_${i}_pan`]) extras.push(`PAN: ${d[`applicant_${i}_pan`]}`);
+    if (d[`applicant_${i}_aadhaar`]) extras.push(`Aadhaar: ${d[`applicant_${i}_aadhaar`]}`);
+    if (d[`applicant_${i}_mobile`]) extras.push(`Mob: ${d[`applicant_${i}_mobile`]}`);
+    if (d[`applicant_${i}_email`]) extras.push(`Email: ${d[`applicant_${i}_email`]}`);
+    if (extras.length > 0) {
+      row(`  Details (${i===2?'2nd':i===3?'3rd':'4th'})`, extras.join('  |  '));
+    }
+  }
   y+=4;
 
   // ── PROPERTY ──
@@ -1701,41 +1919,33 @@ async function buildPDF(d) {
       105, 290, {align:'center'});
   }
 
-  // ── AADHAAR PAGE ──
-  if (d.aadhaar_data_url) {
+  // Helper to append a document page (works for images and PDF documents converted to data URLs)
+  const addDocPage = (title, dataUrl) => {
+    if (!dataUrl) return;
     doc.addPage();
     doc.setFillColor(27,47,85); doc.rect(0,0,210,16,'F');
     doc.setTextColor(255,255,255); doc.setFontSize(10); doc.setFont('helvetica','bold');
-    doc.text('AADHAAR CARD — '+d.applicant_1_name, 105, 10.5, {align:'center'});
+    doc.text(title + ' — ' + d.applicant_1_name, 105, 10.5, {align:'center'});
     doc.setFontSize(7); doc.setTextColor(180,180,180); doc.setFont('helvetica','normal');
     doc.text('Ref: '+d.ref_id, 105, 293, {align:'center'});
-    try{
-      const imgProps = doc.getImageProperties(d.aadhaar_data_url);
-      const aspect   = imgProps.width/imgProps.height;
-      const maxW=174, maxH=240;
-      let iW=maxW, iH=maxW/aspect;
-      if(iH>maxH){iH=maxH; iW=maxH*aspect;}
-      doc.addImage(d.aadhaar_data_url,'JPEG',(210-iW)/2,24,iW,iH);
-    }catch(e){}
-  }
+    try {
+      const imgProps = doc.getImageProperties(dataUrl);
+      const aspect   = imgProps.width / imgProps.height;
+      const maxW = 174, maxH = 240;
+      let iW = maxW, iH = maxW / aspect;
+      if (iH > maxH) { iH = maxH; iW = maxH * aspect; }
+      doc.addImage(dataUrl, 'JPEG', (210 - iW) / 2, 24, iW, iH);
+    } catch(e) {}
+  };
+
+  // ── AADHAAR FRONT PAGE ──
+  addDocPage('AADHAAR CARD (FRONT)', d.aadhaar_front_data_url);
+
+  // ── AADHAAR BACK PAGE ──
+  addDocPage('AADHAAR CARD (BACK)', d.aadhaar_back_data_url);
 
   // ── PAN CARD PAGE ──
-  if (d.pan_card_data_url) {
-    doc.addPage();
-    doc.setFillColor(27,47,85); doc.rect(0,0,210,16,'F');
-    doc.setTextColor(255,255,255); doc.setFontSize(10); doc.setFont('helvetica','bold');
-    doc.text('PAN CARD — '+d.applicant_1_name, 105, 10.5, {align:'center'});
-    doc.setFontSize(7); doc.setTextColor(180,180,180); doc.setFont('helvetica','normal');
-    doc.text('Ref: '+d.ref_id, 105, 293, {align:'center'});
-    try{
-      const imgProps = doc.getImageProperties(d.pan_card_data_url);
-      const aspect   = imgProps.width/imgProps.height;
-      const maxW=174, maxH=240;
-      let iW=maxW, iH=maxW/aspect;
-      if(iH>maxH){iH=maxH; iW=maxH*aspect;}
-      doc.addImage(d.pan_card_data_url,'JPEG',(210-iW)/2,24,iW,iH);
-    }catch(e){}
-  }
+  addDocPage('PAN CARD', d.pan_card_data_url);
 
   return doc;
 }
@@ -1782,7 +1992,11 @@ function showConfirm(d, ref) {
     ['Bank',    `${d.bank_name} — ${d.bank_branch}`],
     d.deal_notes ? ['Deal Notes', d.deal_notes] : null,
     ['Signature', d.signature_type==='digital' ? 'Digital (drawn)' : 'Manual (blank in PDF)'],
-    ['Documents', [aadhaarDataUrl?'Aadhaar':'', panDataUrl?'PAN Card':''].filter(Boolean).join(', ')||'None attached'],
+    ['Documents', [
+      aadhaarFrontDataUrl ? 'Aadhaar (Front)' : '',
+      aadhaarBackDataUrl ? 'Aadhaar (Back)' : '',
+      panDataUrl ? 'PAN Card' : ''
+    ].filter(Boolean).join(', ') || 'None attached'],
     ['Submitted', new Date(d.submitted_at).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})+' IST'],
   ].filter(Boolean);
 
@@ -1855,11 +2069,27 @@ document.getElementById('newBtn').addEventListener('click', ()=>{
   sigPad.clear(); sigOverlay.style.opacity=''; sigBox.classList.remove('active','filled','invalid');
   document.getElementById('sig-digital-section').classList.add('hidden');
   document.getElementById('sig-manual-section').classList.add('hidden');
-  aadhaarDataUrl=null; panDataUrl=null;
-  ['aadhaarCard','panCardImg'].forEach(id=>document.getElementById(id).classList.remove('has-file'));
-  document.getElementById('aadhaarImg').src=''; document.getElementById('aadhaar_file').value='';
-  document.getElementById('panImg').src='';     document.getElementById('pan_file').value='';
-  document.getElementById('aadhaarTitle').textContent='Upload Aadhaar Card';
+  aadhaarFrontDataUrl=null; aadhaarFrontPdfBytes=null;
+  aadhaarBackDataUrl=null;  aadhaarBackPdfBytes=null;
+  panDataUrl=null;          panPdfBytes=null;
+  ['aadhaarFrontCard','aadhaarBackCard','panCardImg'].forEach(id=>{
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('has-file');
+  });
+  ['aadhaarFrontImg','aadhaarBackImg','panImg'].forEach(id=>{
+    const el = document.getElementById(id);
+    if (el) { el.src=''; el.style.display='none'; }
+  });
+  ['aadhaarFrontPdfBadge','aadhaarBackPdfBadge','panPdfBadge'].forEach(id=>{
+    const el = document.getElementById(id);
+    if (el) el.style.display='none';
+  });
+  ['aadhaar_front_file','aadhaar_front_cam','aadhaar_back_file','aadhaar_back_cam','pan_file','pan_cam'].forEach(id=>{
+    const el = document.getElementById(id);
+    if (el) el.value='';
+  });
+  document.getElementById('aadhaarFrontTitle').textContent='Upload Aadhaar Front';
+  document.getElementById('aadhaarBackTitle').textContent='Upload Aadhaar Back';
   document.getElementById('panTitle').textContent='Upload PAN Card';
   document.getElementById('dt').value=new Date().toISOString().slice(0,10);
   document.querySelectorAll('.field-wrap').forEach(fw=>{
