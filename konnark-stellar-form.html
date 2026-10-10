@@ -576,9 +576,8 @@ input[type="file"] { display: none; }
   <div class="step-list">
     <div class="step-item active" data-sec="applicants"><span class="s-num">1</span> Applicants</div>
     <div class="step-item" data-sec="property"><span class="s-num">2</span> Property</div>
-    <div class="step-item" data-sec="contact"><span class="s-num">3</span> Contact</div>
-    <div class="step-item" data-sec="bank"><span class="s-num">4</span> Bank</div>
-    <div class="step-item" data-sec="signature"><span class="s-num">5</span> Sign</div>
+    <div class="step-item" data-sec="bank"><span class="s-num">3</span> Bank</div>
+    <div class="step-item" data-sec="signature"><span class="s-num">4</span> Sign</div>
   </div>
 </div>
 
@@ -593,8 +592,8 @@ input[type="file"] { display: none; }
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
     </div>
     <div class="section-head-text">
-      <h2>Applicants</h2>
-      <p>Select number of applicants and enter names as per PAN card</p>
+      <h2>Applicants &amp; Identity</h2>
+      <p>Select number of applicants, personal identity and contact details</p>
     </div>
   </div>
   <div class="section-body">
@@ -624,17 +623,58 @@ input[type="file"] { display: none; }
 
     <!-- Applicant 1 -->
     <div class="field-wrap" id="fw-a1">
-      <div class="applicant-row">
-        <div class="a-badge primary">1</div>
-        <div class="fl" style="flex:1">
-          <input type="text" id="a1" name="applicant_1_name" placeholder=" " autocomplete="off" />
-          <label for="a1">Name of 1st Applicant <span style="color:var(--red)">*</span></label>
-          <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+      <div class="applicant-card-group" style="background:var(--line-2);border:1.5px solid var(--line);border-radius:var(--r);padding:18px;">
+        <div class="applicant-row" style="margin-bottom:12px;">
+          <div class="a-badge primary">1</div>
+          <div class="fl" style="flex:1">
+            <input type="text" id="a1" name="applicant_1_name" placeholder=" " autocomplete="off" />
+            <label for="a1">Name of 1st Applicant <span style="color:var(--red)">*</span></label>
+            <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          </div>
         </div>
-      </div>
-      <div class="err-line" id="e-a1" style="padding-left:36px">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg>
-        Required — capital letters, single spaces only.
+        <div class="err-line" id="e-a1" style="padding-left:36px;margin-bottom:14px;">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg>
+          Required — capital letters, single spaces only.
+        </div>
+
+        <!-- Mandatory Identity Details for 1st Applicant -->
+        <div class="g2" style="margin-bottom:12px;">
+          <div class="field-wrap" id="fw-pan" style="margin:0;">
+            <div class="fl">
+              <input type="text" id="pan" name="pan_number" placeholder=" " maxlength="10" autocomplete="off" spellcheck="false" />
+              <label for="pan">PAN Card Number <span style="color:var(--red)">*</span></label>
+              <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            </div>
+            <div class="err-line" id="e-pan"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Invalid PAN — format: ABCDE1234F</div>
+          </div>
+          <div class="field-wrap" id="fw-aadhaar" style="margin:0;">
+            <div class="fl">
+              <input type="text" id="aadhaar_no" name="aadhaar_number" placeholder=" " maxlength="12" inputmode="numeric" autocomplete="off" spellcheck="false" />
+              <label for="aadhaar_no">Aadhaar Card Number <span style="color:var(--red)">*</span></label>
+              <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            </div>
+            <div class="err-line" id="e-aadhaar"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Enter a valid 12-digit Aadhaar number.</div>
+          </div>
+        </div>
+
+        <div class="g2">
+          <div class="field-wrap" id="fw-mob" style="margin:0;">
+            <div class="fl">
+              <input type="tel" id="mob" name="contact_number" placeholder=" " inputmode="tel" />
+              <label for="mob">Contact Number (+91) <span style="color:var(--red)">*</span></label>
+              <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            </div>
+            <div class="err-line" id="e-mob"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Valid 10-digit Indian mobile required.</div>
+          </div>
+          <div class="field-wrap" id="fw-email" style="margin:0;">
+            <div class="fl">
+              <input type="email" id="email" name="email" placeholder=" " inputmode="email" />
+              <label for="email">Email Address <span style="color:var(--red)">*</span></label>
+              <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            </div>
+            <div class="err-line" id="e-email"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Enter a valid email address.</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -840,60 +880,7 @@ input[type="file"] { display: none; }
   </div>
 </div>
 
-<!-- ══════════ 3. CONTACT ══════════ -->
-<div class="section" id="sec-contact">
-  <div class="section-head">
-    <div class="section-icon">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-    </div>
-    <div class="section-head-text">
-      <h2>Contact &amp; Identity</h2>
-      <p>PAN card number, mobile and email address</p>
-    </div>
-  </div>
-  <div class="section-body">
-
-    <div class="field-wrap" id="fw-pan">
-      <div class="fl">
-        <input type="text" id="pan" name="pan_number" placeholder=" " maxlength="10" autocomplete="off" spellcheck="false" />
-        <label for="pan">PAN Card Number <span style="color:var(--red)">*</span></label>
-        <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-      </div>
-      <div class="err-line" id="e-pan"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Invalid PAN — format: ABCDE1234F</div>
-    </div>
-
-    <div class="field-wrap" id="fw-aadhaar">
-      <div class="fl">
-        <input type="text" id="aadhaar_no" name="aadhaar_number" placeholder=" " maxlength="12" inputmode="numeric" autocomplete="off" spellcheck="false" />
-        <label for="aadhaar_no">Aadhaar Card Number <span style="color:var(--red)">*</span></label>
-        <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-      </div>
-      <div class="err-line" id="e-aadhaar"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Enter a valid 12-digit Aadhaar number.</div>
-    </div>
-
-    <div class="g2">
-      <div class="field-wrap" id="fw-mob">
-        <div class="fl">
-          <input type="tel" id="mob" name="contact_number" placeholder=" " inputmode="tel" />
-          <label for="mob">Contact Number (+91) <span style="color:var(--red)">*</span></label>
-          <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-        </div>
-        <div class="err-line" id="e-mob"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Valid 10-digit Indian mobile required.</div>
-      </div>
-      <div class="field-wrap" id="fw-email">
-        <div class="fl">
-          <input type="email" id="email" name="email" placeholder=" " inputmode="email" />
-          <label for="email">Email Address <span style="color:var(--red)">*</span></label>
-          <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-        </div>
-        <div class="err-line" id="e-email"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Enter a valid email address.</div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- ══════════ 4. BANK DETAILS ══════════ -->
+<!-- ══════════ 3. BANK DETAILS ══════════ -->
 <div class="section" id="sec-bank">
   <div class="section-head">
     <div class="section-icon">
@@ -1629,9 +1616,8 @@ document.getElementById('consent').addEventListener('change',()=>{
 
 /* ── STEP NAV ────────────────────────────────────────────────── */
 const secV = {
-  applicants: ()=> V['fw-count']() && V['fw-a1']() && V['fw-a2']() && V['fw-a3']() && V['fw-a4'](),
+  applicants: ()=> V['fw-count']() && V['fw-a1']() && V['fw-pan']() && V['fw-aadhaar']() && V['fw-mob']() && V['fw-email']() && V['fw-a2']() && V['fw-a3']() && V['fw-a4'](),
   property:   ()=> V['fw-agr']() && V['fw-park']() && V['fw-park-type']() && V['fw-flat']() && V['fw-floor']() && V['fw-addr'](),
-  contact:    ()=> V['fw-pan']() && V['fw-aadhaar']() && V['fw-mob']() && V['fw-email'](),
   bank:       ()=> V['fw-bname']() && V['fw-accno']() && V['fw-ifsc']() && V['fw-bnk']() && V['fw-branch'](),
   signature:  ()=> V['fw-sig-type']() && V['fw-sig']() && V['fw-date']() && V['fw-consent'](),
 };
