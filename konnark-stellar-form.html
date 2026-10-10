@@ -444,12 +444,17 @@ input[type="file"] { display: none; }
 }
 .pl-card:hover { border-color: rgba(212,175,85,.45); background: rgba(255,255,255,.07); transform: translateY(-2px); }
 .pl-card:active { transform: translateY(0); }
-.pl-card-badge {
-  width: 44px; height: 44px; border-radius: 50%;
-  background: rgba(212,175,85,.1); border: 1.5px solid rgba(212,175,85,.22);
-  display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;
+/* logo area on landing */
+.pl-brand-logo { margin-bottom: 36px; text-align: center; }
+.pl-logo-img { height: 64px; max-width: 220px; object-fit: contain; filter: brightness(0) invert(1); }
+.pl-logo-fallback {
+  display: none;
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 28px; font-weight: 400; color: #fff; letter-spacing: 4px;
 }
-.pl-card-badge svg { color: var(--gold-light); }
+/* header logo */
+.header-logo-img { height: 36px; max-width: 140px; object-fit: contain; filter: brightness(0) invert(1); vertical-align: middle; margin-right: 12px; }
+
 .pl-card-name {
   font-family: 'DM Serif Display', Georgia, serif;
   font-size: 22px; font-weight: 400; color: #fff; line-height: 1.2; margin-bottom: 4px;
@@ -482,16 +487,18 @@ input[type="file"] { display: none; }
 
 <!-- ── PROJECT SELECTION LANDING ───────────────────────────── -->
 <div id="projectLanding">
-  <div class="pl-logo">Konnark</div>
+  <!-- Company logo above heading -->
+  <div class="pl-brand-logo">
+    <img src="logo.png" alt="Konnark Group" class="pl-logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'">
+    <span class="pl-logo-fallback">KONNARK GROUP</span>
+  </div>
   <h1 class="pl-heading">Select Your Project</h1>
   <p class="pl-sub">Choose a project to begin the registration form</p>
+
   <div class="pl-cards">
 
     <!-- Stellar -->
     <div class="pl-card" onclick="selectProject('Stellar')">
-      <div class="pl-card-badge">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      </div>
       <div class="pl-card-name">Konnark <em>Stellar</em></div>
       <div class="pl-card-desc">Residential Project</div>
       <div class="pl-card-btn">Select <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
@@ -499,9 +506,6 @@ input[type="file"] { display: none; }
 
     <!-- Orion -->
     <div class="pl-card" onclick="selectProject('Orion')">
-      <div class="pl-card-badge">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-      </div>
       <div class="pl-card-name">Konnark <em>Orion</em></div>
       <div class="pl-card-desc">Residential Project</div>
       <div class="pl-card-btn">Select <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
@@ -509,9 +513,6 @@ input[type="file"] { display: none; }
 
     <!-- Astra -->
     <div class="pl-card" onclick="selectProject('Astra')">
-      <div class="pl-card-badge">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-      </div>
       <div class="pl-card-name">Konnark <em>Astra</em></div>
       <div class="pl-card-desc">Residential Project</div>
       <div class="pl-card-btn">Select <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
@@ -519,9 +520,6 @@ input[type="file"] { display: none; }
 
     <!-- Highcastle -->
     <div class="pl-card" onclick="selectProject('Highcastle')">
-      <div class="pl-card-badge">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-4h6v4"/><rect x="9" y="10" width="2" height="2"/><rect x="13" y="10" width="2" height="2"/></svg>
-      </div>
       <div class="pl-card-name">Konnark <em>Highcastle</em></div>
       <div class="pl-card-desc">Residential Project</div>
       <div class="pl-card-btn">Select <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
@@ -546,10 +544,15 @@ input[type="file"] { display: none; }
 <!-- ── HEADER ────────────────────────────────────────────────── -->
 <header class="site-header" id="siteHeader" style="display:none">
   <div class="header-inner">
-    <div class="header-eyebrow">
-      <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5"/></svg>
-      Registration Procedure
-      <button class="change-project-btn" onclick="goToLanding()" title="Change project">
+    <div class="header-top-bar" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <div class="header-brand-logo" style="display:flex;align-items:center;gap:12px;">
+        <img src="logo.png" alt="Konnark Group" class="header-logo-img" onerror="this.style.display='none'">
+        <div class="header-eyebrow" style="margin:0;">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5"/></svg>
+          Registration Procedure
+        </div>
+      </div>
+      <button class="change-project-btn" onclick="goToLanding()" title="Change project" style="margin:0;">
         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
         Change
       </button>
@@ -692,7 +695,7 @@ input[type="file"] { display: none; }
     </div>
     <div class="section-head-text">
       <h2>Property Details</h2>
-      <p>Agreement value, parking, flat number and address</p>
+      <p>Agreement value, flat number, address and parking details</p>
     </div>
   </div>
   <div class="section-body">
@@ -712,7 +715,7 @@ input[type="file"] { display: none; }
 
     <!-- Parking type (no amount) -->
     <div class="field-wrap" id="fw-park">
-      <p class="sub-label">Parking <span>*</span></p>
+      <p class="sub-label">1 Car Parking Positions in Stack Mechanism (Up or Down) <span>*</span></p>
       <div class="pill-group">
         <div class="pill-opt"><input type="radio" name="park_status" id="ps-inc" value="Including"><label for="ps-inc">Including</label></div>
         <div class="pill-opt"><input type="radio" name="park_status" id="ps-exc" value="Excluding"><label for="ps-exc">Excluding</label></div>
@@ -726,14 +729,14 @@ input[type="file"] { display: none; }
 
     <!-- Parking Type — visible only when Including/Excluding selected -->
     <div class="field-wrap hidden" id="fw-park-type">
-      <p class="sub-label">Parking Type <span>*</span></p>
+      <p class="sub-label">1 Car Parking Positions in Stack Mechanism (Up or Down) Type <span>*</span></p>
       <div class="pill-group">
         <div class="pill-opt"><input type="radio" name="park_type" id="pt-a" value="Type A"><label for="pt-a">Type A</label></div>
         <div class="pill-opt"><input type="radio" name="park_type" id="pt-b" value="Type B"><label for="pt-b">Type B</label></div>
       </div>
       <div class="err-line" id="e-park-type" style="margin-top:8px">
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg>
-        Select Type A or Type B.
+        Select parking type.
       </div>
     </div>
 
@@ -1574,7 +1577,7 @@ async function buildPDF(d) {
   const parkLabel = d.parking_status === 'Not Required'
     ? 'Not Required'
     : `${d.parking_status}${d.parking_type ? ' — '+d.parking_type : ''}`;
-  row('Parking', parkLabel);
+  row('1 Car Parking Positions in Stack Mechanism (Up or Down)', parkLabel);
   row('Flat No.', d.flat_no);
   row('Floor', d.floor);
   row('Address', d.address);
@@ -1747,7 +1750,7 @@ function showConfirm(d, ref) {
     ['Applicant(s)', names],
     ['Flat / Floor',  `${d.flat_no} — Floor ${d.floor}`],
     ['Agreement Value', inr(d.agreement_value)],
-    ['Parking', d.parking_status === 'Not Required' ? 'Not Required' : `${d.parking_status}${d.parking_type ? ' — '+d.parking_type : ''}`],
+    ['1 Car Parking Positions in Stack Mechanism (Up or Down)', d.parking_status === 'Not Required' ? 'Not Required' : `${d.parking_status}${d.parking_type ? ' — '+d.parking_type : ''}`],
     ['PAN',     `<span class="mono">${maskPan(d.pan_number)}</span>`],
     ['Aadhaar', `<span class="mono">XXXX XXXX ${d.aadhaar_number?.slice(-4)||'****'}</span>`],
     ['Contact', d.contact_number],
