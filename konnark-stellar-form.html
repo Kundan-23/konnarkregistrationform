@@ -433,7 +433,7 @@ input[type="file"] { display: none; }
   color: #fff; text-align: center; line-height: 1.15; margin-bottom: 10px;
 }
 .pl-sub { font-size: 14px; color: rgba(255,255,255,.4); text-align: center; margin-bottom: 44px; }
-.pl-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: 100%; max-width: 500px; }
+.pl-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: 100%; max-width: 560px; }
 @media (max-width: 440px) { .pl-cards { grid-template-columns: 1fr; } }
 .pl-card {
   position: relative; padding: 32px 22px 26px;
@@ -494,10 +494,7 @@ input[type="file"] { display: none; }
       </div>
       <div class="pl-card-name">Konnark <em>Stellar</em></div>
       <div class="pl-card-desc">Residential Project</div>
-      <div class="pl-card-btn">
-        Select
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </div>
+      <div class="pl-card-btn">Select <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
     </div>
 
     <!-- Orion -->
@@ -507,10 +504,27 @@ input[type="file"] { display: none; }
       </div>
       <div class="pl-card-name">Konnark <em>Orion</em></div>
       <div class="pl-card-desc">Residential Project</div>
-      <div class="pl-card-btn">
-        Select
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      <div class="pl-card-btn">Select <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+
+    <!-- Astra -->
+    <div class="pl-card" onclick="selectProject('Astra')">
+      <div class="pl-card-badge">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
       </div>
+      <div class="pl-card-name">Konnark <em>Astra</em></div>
+      <div class="pl-card-desc">Residential Project</div>
+      <div class="pl-card-btn">Select <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </div>
+
+    <!-- Highcastle -->
+    <div class="pl-card" onclick="selectProject('Highcastle')">
+      <div class="pl-card-badge">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-4h6v4"/><rect x="9" y="10" width="2" height="2"/><rect x="13" y="10" width="2" height="2"/></svg>
+      </div>
+      <div class="pl-card-name">Konnark <em>Highcastle</em></div>
+      <div class="pl-card-desc">Residential Project</div>
+      <div class="pl-card-btn">Select <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
     </div>
 
   </div>
@@ -845,40 +859,18 @@ input[type="file"] { display: none; }
           <label for="ifsc">IFSC Code <span style="color:var(--red)">*</span></label>
           <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
         </div>
-        <div class="err-line" id="e-ifsc"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Format: SBIN0001234</div>
+        <div class="err-line" id="e-ifsc"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> IFSC Code is required.</div>
       </div>
     </div>
 
     <div class="g2">
       <div class="field-wrap" id="fw-bnk">
         <div class="fl">
-          <select id="bnk" name="bank_name">
-            <option value=""></option>
-            <option>State Bank of India</option>
-            <option>HDFC Bank</option>
-            <option>ICICI Bank</option>
-            <option>Axis Bank</option>
-            <option>Kotak Mahindra Bank</option>
-            <option>Bank of Baroda</option>
-            <option>Punjab National Bank</option>
-            <option>Canara Bank</option>
-            <option>Union Bank of India</option>
-            <option>Bank of India</option>
-            <option>IndusInd Bank</option>
-            <option>Yes Bank</option>
-            <option>IDFC First Bank</option>
-            <option>Federal Bank</option>
-            <option>South Indian Bank</option>
-            <option>Bandhan Bank</option>
-            <option>RBL Bank</option>
-            <option>UCO Bank</option>
-            <option>Central Bank of India</option>
-            <option>Indian Bank</option>
-            <option>Other</option>
-          </select>
+          <input type="text" id="bnk" name="bank_name" placeholder=" " autocomplete="off" />
           <label for="bnk">Bank Name <span style="color:var(--red)">*</span></label>
+          <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
         </div>
-        <div class="err-line" id="e-bnk"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Please select your bank.</div>
+        <div class="err-line" id="e-bnk"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Bank name is required.</div>
       </div>
       <div class="field-wrap" id="fw-branch">
         <div class="fl">
@@ -1135,21 +1127,40 @@ input[type="file"] { display: none; }
 /* ── PROJECT SELECTION ───────────────────────────────────────── */
 let selectedProject = ''; // 'Stellar' or 'Orion'
 
+/* ── PROJECT CONFIG ──────────────────────────────────────────── */
+const PROJECT_CONFIG = {
+  'Stellar':    { parkingTypes: ['Type A', 'Type B'],             refPrefix: 'KS' },
+  'Orion':      { parkingTypes: ['Type A', 'Type B'],             refPrefix: 'KO' },
+  'Astra':      { parkingTypes: ['Type A', 'Type B', 'Type C'],   refPrefix: 'KA' },
+  'Highcastle': { parkingTypes: ['Type A', 'Type B', 'Type C', 'Type D'], refPrefix: 'KH' },
+};
+
+function renderParkingTypes() {
+  const types = PROJECT_CONFIG[selectedProject]?.parkingTypes || ['Type A', 'Type B'];
+  const container = document.querySelector('#fw-park-type .pill-group');
+  if (!container) return;
+  container.innerHTML = types.map((t, i) =>
+    `<div class="pill-opt"><input type="radio" name="park_type" id="pt-${i}" value="${t}"><label for="pt-${i}">${t}</label></div>`
+  ).join('');
+  // re-wire listeners on new radio buttons
+  container.querySelectorAll('input[name="park_type"]').forEach(r => {
+    r.addEventListener('change', () => { vf('fw-park-type'); updateState(); updateSteps(); });
+  });
+}
+
 function selectProject(name) {
   selectedProject = name;
-  // update header
   document.getElementById('headerProjectName').textContent = name;
   document.title = `Konnark ${name} — Registration`;
-  // show form UI, hide landing
-  document.getElementById('projectLanding').style.display  = 'none';
-  document.getElementById('siteHeader').style.display      = '';
-  document.getElementById('stepStrip').style.display       = '';
-  document.getElementById('formWrap').style.display        = '';
+  document.getElementById('projectLanding').style.display = 'none';
+  document.getElementById('siteHeader').style.display     = '';
+  document.getElementById('stepStrip').style.display      = '';
+  document.getElementById('formWrap').style.display       = '';
+  renderParkingTypes();
   window.scrollTo({top:0,behavior:'instant'});
 }
 
 function goToLanding() {
-  // only go back if form has not been started (or always allow)
   document.getElementById('projectLanding').style.display  = '';
   document.getElementById('siteHeader').style.display      = 'none';
   document.getElementById('stepStrip').style.display       = 'none';
@@ -1318,8 +1329,8 @@ const V = {
   'fw-email':      () => email_re.test(g('email').trim()),
   'fw-bname':      () => g('bname').trim().length>0,
   'fw-accno':      () => acc_re.test(g('accno').trim()),
-  'fw-ifsc':       () => ifsc_re.test(g('ifsc').trim()),
-  'fw-bnk':        () => g('bnk') !== '',
+  'fw-ifsc':       () => g('ifsc').trim().length > 0,
+  'fw-bnk':        () => g('bnk').trim().length > 0,
   'fw-branch':     () => g('branch').trim().length>0,
   'fw-sig-type':   () => sigType !== '',
   'fw-sig':        () => sigType === 'manual' || !sigPad.isEmpty(),
@@ -1459,7 +1470,7 @@ function updateState() {
 
 /* ── HELPERS ─────────────────────────────────────────────────── */
 function refId() {
-  const prefix = selectedProject === 'Orion' ? 'KO' : 'KS';
+  const prefix = PROJECT_CONFIG[selectedProject]?.refPrefix || 'KS';
   return `${prefix}-${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${Math.floor(1000+Math.random()*9000)}`;
 }
 function maskPan(p){ return p?.length>=4?'██████'+p.slice(-4):'**********'; }
