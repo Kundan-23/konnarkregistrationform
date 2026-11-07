@@ -9,7 +9,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
+  <script>
+    // Initialize PDF.js worker safely via Blob URL to bypass cross-origin restrictions
+    try {
+      const workerBlob = new Blob(
+        ["importScripts('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js');"],
+        { type: 'application/javascript' }
+      );
+      pdfjsLib.GlobalWorkerOptions.workerSrc = URL.createObjectURL(workerBlob);
+    } catch(e) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
@@ -1392,12 +1403,45 @@ document.querySelectorAll('input[name="num_app"]').forEach(r => {
 });
 
 /* ── FILE UPLOAD HELPERS ────────────────────────────────────── */
+let aadhaarFrontPages = [];
+let aadhaarBackPages  = [];
+let panPages          = [];
 let aadhaarFrontDataUrl = null;
 let aadhaarFrontPdfBytes = null;
 let aadhaarBackDataUrl  = null;
 let aadhaarBackPdfBytes = null;
 let panDataUrl          = null;
 let panPdfBytes         = null;
+
+function normalizeImageFile(file, maxWidth = 1800, maxHeight = 1800, quality = 0.88) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = e => {
+      const img = new Image();
+      img.onerror = () => resolve(e.target.result);
+      img.onload = () => {
+        let w = img.naturalWidth || img.width;
+        let h = img.naturalHeight || img.height;
+        if (!w || !h) { resolve(e.target.result); return; }
+        if (w > maxWidth || h > maxHeight) {
+          const r = Math.min(maxWidth / w, maxHeight / h);
+          w = Math.round(w * r);
+          h = Math.round(h * r);
+        }
+        const c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, w, h);
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(c.toDataURL('image/jpeg', quality));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
 
 function setupUpload(fileInputId, camInputId, cardId, imgId, pdfBadgeId, titleId, removeId, defaultTitle, onSet) {
   const fileInput = document.getElementById(fileInputId);
@@ -1410,50 +1454,60 @@ function setupUpload(fileInputId, camInputId, cardId, imgId, pdfBadgeId, titleId
 
   async function handleFile(file) {
     if (!file) return;
-    if (file.size > 15 * 1024 * 1024) {
-      showToast('File too large — maximum 15 MB.');
+    if (file.size > 25 * 1024 * 1024) {
+      showToast('File too large — maximum 25 MB.');
       return;
     }
 
-    if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+    const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+    const isImg = file.type.startsWith('image/') || /\.(jpe?g|png|webp|heic|bmp|gif)$/i.test(file.name);
+
+    if (isPdf) {
       const reader = new FileReader();
       reader.onload = async e => {
         try {
           const typedarray = new Uint8Array(e.target.result);
-          // Render 1st page of PDF to image thumbnail using pdf.js
           const pdfDoc = await pdfjsLib.getDocument({ data: typedarray }).promise;
-          const page = await pdfDoc.getPage(1);
-          const viewport = page.getViewport({ scale: 1.5 });
-          const canvas = document.createElement('canvas');
-          const context = canvas.getContext('2d');
-          canvas.height = viewport.height;
-          canvas.width = viewport.width;
-          await page.render({ canvasContext: context, viewport: viewport }).promise;
-          const pageDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+          const pagesDataUrls = [];
+          for (let p = 1; p <= pdfDoc.numPages; p++) {
+            const page = await pdfDoc.getPage(p);
+            const viewport = page.getViewport({ scale: 1.5 });
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            await page.render({ canvasContext: context, viewport: viewport }).promise;
+            pagesDataUrls.push(canvas.toDataURL('image/jpeg', 0.88));
+          }
 
-          onSet(pageDataUrl, typedarray);
-          img.src = pageDataUrl;
+          onSet(pagesDataUrls, typedarray);
+          img.src = pagesDataUrls[0] || '';
           img.style.display = 'block';
-          if (pdfBadge) pdfBadge.style.display = 'block';
+          if (pdfBadge) {
+            pdfBadge.textContent = pdfDoc.numPages > 1 ? `📄 PDF Document (${pdfDoc.numPages} pages)` : '📄 PDF Document Selected';
+            pdfBadge.style.display = 'block';
+          }
           card.classList.add('has-file');
           title.textContent = file.name;
         } catch (err) {
+          console.error('PDF parsing error:', err);
           showToast('Could not load PDF document.');
         }
       };
       reader.readAsArrayBuffer(file);
-    } else if (file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onload = e => {
-        const url = e.target.result;
-        onSet(url, null);
-        img.src = url;
+    } else if (isImg) {
+      try {
+        const jpegDataUrl = await normalizeImageFile(file);
+        onSet([jpegDataUrl], null);
+        img.src = jpegDataUrl;
         img.style.display = 'block';
         if (pdfBadge) pdfBadge.style.display = 'none';
         card.classList.add('has-file');
         title.textContent = file.name;
-      };
-      reader.readAsDataURL(file);
+      } catch (err) {
+        console.error('Image loading error:', err);
+        showToast('Could not load image.');
+      }
     } else {
       showToast('Please upload an image (JPG, PNG) or PDF document.');
     }
@@ -1463,8 +1517,9 @@ function setupUpload(fileInputId, camInputId, cardId, imgId, pdfBadgeId, titleId
   if (camInput)  camInput.addEventListener('change', function() { handleFile(this.files[0]); });
 
   if (remove) {
-    remove.addEventListener('click', () => {
-      onSet(null, null);
+    remove.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      onSet([], null);
       img.src = '';
       img.style.display = 'none';
       if (pdfBadge) pdfBadge.style.display = 'none';
@@ -1479,19 +1534,31 @@ function setupUpload(fileInputId, camInputId, cardId, imgId, pdfBadgeId, titleId
 setupUpload(
   'aadhaar_front_file', 'aadhaar_front_cam', 'aadhaarFrontCard', 'aadhaarFrontImg',
   'aadhaarFrontPdfBadge', 'aadhaarFrontTitle', 'removeAadhaarFront', 'Upload Aadhaar Front',
-  (imgUrl, pdfBytes) => { aadhaarFrontDataUrl = imgUrl; aadhaarFrontPdfBytes = pdfBytes; }
+  (pages, pdfBytes) => {
+    aadhaarFrontPages = pages;
+    aadhaarFrontDataUrl = pages[0] || null;
+    aadhaarFrontPdfBytes = pdfBytes;
+  }
 );
 
 setupUpload(
   'aadhaar_back_file', 'aadhaar_back_cam', 'aadhaarBackCard', 'aadhaarBackImg',
   'aadhaarBackPdfBadge', 'aadhaarBackTitle', 'removeAadhaarBack', 'Upload Aadhaar Back',
-  (imgUrl, pdfBytes) => { aadhaarBackDataUrl = imgUrl; aadhaarBackPdfBytes = pdfBytes; }
+  (pages, pdfBytes) => {
+    aadhaarBackPages = pages;
+    aadhaarBackDataUrl = pages[0] || null;
+    aadhaarBackPdfBytes = pdfBytes;
+  }
 );
 
 setupUpload(
   'pan_file', 'pan_cam', 'panCardImg', 'panImg',
   'panPdfBadge', 'panTitle', 'removePan', 'Upload PAN Card',
-  (imgUrl, pdfBytes) => { panDataUrl = imgUrl; panPdfBytes = pdfBytes; }
+  (pages, pdfBytes) => {
+    panPages = pages;
+    panDataUrl = pages[0] || null;
+    panPdfBytes = pdfBytes;
+  }
 );
 
 const name_re    = /^[A-Z]+( [A-Z]+)*$/;
@@ -1759,6 +1826,9 @@ function collect(ref) {
     ifsc_code: g('ifsc').trim(), bank_name: g('bnk'), bank_branch: g('branch').trim(),
     signature_type: sigType,
     signature_data_url: sigType==='digital' ? sigPad.toDataURL('image/png') : null,
+    aadhaar_front_pages: aadhaarFrontPages,
+    aadhaar_back_pages:  aadhaarBackPages,
+    pan_pages:           panPages,
     aadhaar_front_data_url: aadhaarFrontDataUrl,
     aadhaar_front_pdf_bytes: aadhaarFrontPdfBytes,
     aadhaar_back_data_url: aadhaarBackDataUrl,
@@ -1962,42 +2032,57 @@ async function buildPDF(d) {
   const sigLabel = d.signature_type === 'digital' ? "Customer's Signature" : "Customer's Signature (to be signed)";
   doc.text(sigLabel, mL, sigY + 27);
 
-  // ── Page footers (applied to ALL pages generated so far) ──
-  const pg = doc.internal.getNumberOfPages();
-  for(let i=1;i<=pg;i++){
-    doc.setPage(i); doc.setFontSize(7); doc.setTextColor(180,180,180); doc.setFont('helvetica','normal');
-    doc.text(
-      `Page ${i} of ${pg}  |  Konnark ${d.project_name || 'Stellar'} Registration  |  ${new Date(d.submitted_at).toISOString()}`,
-      105, 290, {align:'center'});
-  }
-
-  // Helper to append a document page (works for images and PDF documents converted to data URLs)
-  const addDocPage = (title, dataUrl) => {
-    if (!dataUrl) return;
-    doc.addPage();
-    doc.setFillColor(27,47,85); doc.rect(0,0,210,16,'F');
-    doc.setTextColor(255,255,255); doc.setFontSize(10); doc.setFont('helvetica','bold');
-    doc.text(title + ' — ' + d.applicant_1_name, 105, 10.5, {align:'center'});
-    doc.setFontSize(7); doc.setTextColor(180,180,180); doc.setFont('helvetica','normal');
-    doc.text('Ref: '+d.ref_id, 105, 293, {align:'center'});
-    try {
-      const imgProps = doc.getImageProperties(dataUrl);
-      const aspect   = imgProps.width / imgProps.height;
-      const maxW = 174, maxH = 240;
-      let iW = maxW, iH = maxW / aspect;
-      if (iH > maxH) { iH = maxH; iW = maxH * aspect; }
-      doc.addImage(dataUrl, 'JPEG', (210 - iW) / 2, 24, iW, iH);
-    } catch(e) {}
+  // ── Helper to append document pages (images or rendered PDF pages) ──
+  const addDocPages = (title, pages) => {
+    const list = Array.isArray(pages) ? pages : (pages ? [pages] : []);
+    list.forEach((dataUrl, idx) => {
+      if (!dataUrl) return;
+      doc.addPage();
+      doc.setFillColor(27, 47, 85);
+      doc.rect(0, 0, 210, 16, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      const suffix = list.length > 1 ? ` (Page ${idx + 1} of ${list.length})` : '';
+      doc.text(title + suffix + ' — ' + d.applicant_1_name, 105, 10.5, { align: 'center' });
+      doc.setFontSize(7);
+      doc.setTextColor(180, 180, 180);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Ref: ' + d.ref_id, 105, 293, { align: 'center' });
+      try {
+        const imgProps = doc.getImageProperties(dataUrl);
+        const aspect = imgProps.width / imgProps.height;
+        const maxW = 174, maxH = 240;
+        let iW = maxW, iH = maxW / aspect;
+        if (iH > maxH) { iH = maxH; iW = maxH * aspect; }
+        doc.addImage(dataUrl, 'JPEG', (210 - iW) / 2, 24, iW, iH);
+      } catch (err) {
+        console.error('Error drawing attachment image on PDF:', err);
+      }
+    });
   };
 
-  // ── AADHAAR FRONT PAGE ──
-  addDocPage('AADHAAR CARD (FRONT)', d.aadhaar_front_data_url);
+  // ── AADHAAR FRONT PAGES ──
+  addDocPages('AADHAAR CARD (FRONT)', (d.aadhaar_front_pages && d.aadhaar_front_pages.length) ? d.aadhaar_front_pages : d.aadhaar_front_data_url);
 
-  // ── AADHAAR BACK PAGE ──
-  addDocPage('AADHAAR CARD (BACK)', d.aadhaar_back_data_url);
+  // ── AADHAAR BACK PAGES ──
+  addDocPages('AADHAAR CARD (BACK)', (d.aadhaar_back_pages && d.aadhaar_back_pages.length) ? d.aadhaar_back_pages : d.aadhaar_back_data_url);
 
-  // ── PAN CARD PAGE ──
-  addDocPage('PAN CARD', d.pan_card_data_url);
+  // ── PAN CARD PAGES ──
+  addDocPages('PAN CARD', (d.pan_pages && d.pan_pages.length) ? d.pan_pages : d.pan_card_data_url);
+
+  // ── Page footers (applied to ALL pages in the document) ──
+  const pg = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pg; i++) {
+    doc.setPage(i);
+    doc.setFontSize(7);
+    doc.setTextColor(180, 180, 180);
+    doc.setFont('helvetica', 'normal');
+    doc.text(
+      `Page ${i} of ${pg}  |  Konnark ${d.project_name || 'Stellar'} Registration  |  ${new Date(d.submitted_at).toISOString()}`,
+      105, 290, { align: 'center' }
+    );
+  }
 
   return doc;
 }
@@ -2045,9 +2130,9 @@ function showConfirm(d, ref) {
     ['Bank',    `${d.bank_name} — ${d.bank_branch}`],
     ['Signature', d.signature_type==='digital' ? 'Digital (drawn)' : 'Manual (blank in PDF)'],
     ['Documents', [
-      aadhaarFrontDataUrl ? 'Aadhaar (Front)' : '',
-      aadhaarBackDataUrl ? 'Aadhaar (Back)' : '',
-      panDataUrl ? 'PAN Card' : ''
+      (aadhaarFrontPages.length || aadhaarFrontDataUrl) ? 'Aadhaar (Front)' : '',
+      (aadhaarBackPages.length || aadhaarBackDataUrl) ? 'Aadhaar (Back)' : '',
+      (panPages.length || panDataUrl) ? 'PAN Card' : ''
     ].filter(Boolean).join(', ') || 'None attached'],
     ['Submitted', new Date(d.submitted_at).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})+' IST'],
   ].filter(Boolean);
@@ -2121,6 +2206,7 @@ document.getElementById('newBtn').addEventListener('click', ()=>{
   sigPad.clear(); sigOverlay.style.opacity=''; sigBox.classList.remove('active','filled','invalid');
   document.getElementById('sig-digital-section').classList.add('hidden');
   document.getElementById('sig-manual-section').classList.add('hidden');
+  aadhaarFrontPages=[];     aadhaarBackPages=[];     panPages=[];
   aadhaarFrontDataUrl=null; aadhaarFrontPdfBytes=null;
   aadhaarBackDataUrl=null;  aadhaarBackPdfBytes=null;
   panDataUrl=null;          panPdfBytes=null;
