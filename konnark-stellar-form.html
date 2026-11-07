@@ -675,6 +675,16 @@ input[type="file"] { display: none; }
             <div class="err-line" id="e-email"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Enter a valid email address.</div>
           </div>
         </div>
+
+        <!-- Applicant 1 Address -->
+        <div class="field-wrap" id="fw-addr" style="margin:12px 0 0 0;">
+          <div class="fl ta">
+            <textarea id="addr" name="address" placeholder=" " rows="2"></textarea>
+            <label for="addr">Applicant's Address <span style="color:var(--red)">*</span></label>
+            <span class="v-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          </div>
+          <div class="err-line" id="e-addr"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Address is required.</div>
+        </div>
       </div>
     </div>
 
@@ -711,6 +721,18 @@ input[type="file"] { display: none; }
           <div class="fl">
             <input type="email" id="a2_email" name="applicant_2_email" placeholder=" " inputmode="email" />
             <label for="a2_email">Email Address <span class="optional-tag">Optional</span></label>
+          </div>
+        </div>
+        <div style="margin-top:12px;">
+          <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:6px;">
+            <label style="font-size:12px;color:var(--ink-3);display:inline-flex;align-items:center;gap:6px;cursor:pointer;user-select:none;">
+              <input type="checkbox" id="a2_same_addr" style="accent-color:var(--navy);cursor:pointer;width:14px;height:14px;" />
+              Same as 1st Applicant's Address
+            </label>
+          </div>
+          <div class="fl ta">
+            <textarea id="a2_addr" name="applicant_2_address" placeholder=" " rows="2"></textarea>
+            <label for="a2_addr">Applicant's Address <span class="optional-tag">Optional</span></label>
           </div>
         </div>
       </div>
@@ -751,6 +773,18 @@ input[type="file"] { display: none; }
             <label for="a3_email">Email Address <span class="optional-tag">Optional</span></label>
           </div>
         </div>
+        <div style="margin-top:12px;">
+          <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:6px;">
+            <label style="font-size:12px;color:var(--ink-3);display:inline-flex;align-items:center;gap:6px;cursor:pointer;user-select:none;">
+              <input type="checkbox" id="a3_same_addr" style="accent-color:var(--navy);cursor:pointer;width:14px;height:14px;" />
+              Same as 1st Applicant's Address
+            </label>
+          </div>
+          <div class="fl ta">
+            <textarea id="a3_addr" name="applicant_3_address" placeholder=" " rows="2"></textarea>
+            <label for="a3_addr">Applicant's Address <span class="optional-tag">Optional</span></label>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -789,6 +823,18 @@ input[type="file"] { display: none; }
             <label for="a4_email">Email Address <span class="optional-tag">Optional</span></label>
           </div>
         </div>
+        <div style="margin-top:12px;">
+          <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:6px;">
+            <label style="font-size:12px;color:var(--ink-3);display:inline-flex;align-items:center;gap:6px;cursor:pointer;user-select:none;">
+              <input type="checkbox" id="a4_same_addr" style="accent-color:var(--navy);cursor:pointer;width:14px;height:14px;" />
+              Same as 1st Applicant's Address
+            </label>
+          </div>
+          <div class="fl ta">
+            <textarea id="a4_addr" name="applicant_4_address" placeholder=" " rows="2"></textarea>
+            <label for="a4_addr">Applicant's Address <span class="optional-tag">Optional</span></label>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -803,7 +849,7 @@ input[type="file"] { display: none; }
     </div>
     <div class="section-head-text">
       <h2>Property Details</h2>
-      <p>Agreement value, flat number, address and parking details</p>
+      <p>Agreement value, flat number, and parking details</p>
     </div>
   </div>
   <div class="section-body">
@@ -866,15 +912,6 @@ input[type="file"] { display: none; }
         </div>
         <div class="err-line" id="e-floor"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Required.</div>
       </div>
-    </div>
-
-    <!-- Address -->
-    <div class="field-wrap" id="fw-addr">
-      <div class="fl ta">
-        <textarea id="addr" name="address" placeholder=" " rows="3"></textarea>
-        <label for="addr">Full Address <span style="color:var(--red)">*</span></label>
-      </div>
-      <div class="err-line" id="e-addr"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5" stroke-linecap="round"/></svg> Address is required.</div>
     </div>
 
   </div>
@@ -1333,8 +1370,21 @@ document.querySelectorAll('input[name="num_app"]').forEach(r => {
     for (let i=2; i<=4; i++) {
       const fw  = document.getElementById(`fw-a${i}`);
       const inp = document.getElementById(`a${i}`);
-      if (i <= numApp) { fw.classList.remove('hidden'); inp.required=true; }
-      else { fw.classList.add('hidden'); inp.required=false; inp.value=''; fw.classList.remove('touched','has-error'); }
+      if (i <= numApp) {
+        fw.classList.remove('hidden');
+        inp.required=true;
+      } else {
+        fw.classList.add('hidden');
+        inp.required=false;
+        inp.value='';
+        fw.classList.remove('touched','has-error');
+        ['pan','aadhaar','mob','email','addr'].forEach(field => {
+          const el = document.getElementById(`a${i}_${field}`);
+          if (el) { el.value = ''; el.closest('.fl')?.classList.remove('filled'); }
+        });
+        const cb = document.getElementById(`a${i}_same_addr`);
+        if (cb) cb.checked = false;
+      }
     }
     document.getElementById('fw-count').classList.add('touched');
     updateState(); updateSteps();
@@ -1557,9 +1607,44 @@ Object.entries(fmap).forEach(([id,fw])=>{
   if (el.tagName==='SELECT') el.classList.toggle('filled',el.value!=='');
 });
 
-// textarea floating label
+// textarea floating label and "Same as 1st Applicant" sync
+['addr', 'a2_addr', 'a3_addr', 'a4_addr'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input', function() {
+    this.closest('.fl')?.classList.toggle('filled', this.value.length > 0);
+  });
+});
+
+[2, 3, 4].forEach(i => {
+  const cb = document.getElementById(`a${i}_same_addr`);
+  const target = document.getElementById(`a${i}_addr`);
+  const src = document.getElementById('addr');
+  if (!cb || !target || !src) return;
+
+  cb.addEventListener('change', function() {
+    if (this.checked) {
+      target.value = src.value;
+      target.closest('.fl')?.classList.toggle('filled', target.value.length > 0);
+    }
+  });
+
+  target.addEventListener('input', function() {
+    if (cb.checked && target.value !== src.value) {
+      cb.checked = false;
+    }
+  });
+});
+
 document.getElementById('addr').addEventListener('input', function() {
-  this.closest('.fl').classList.toggle('filled',this.value.length>0);
+  [2, 3, 4].forEach(i => {
+    const cb = document.getElementById(`a${i}_same_addr`);
+    const target = document.getElementById(`a${i}_addr`);
+    if (cb?.checked && target) {
+      target.value = this.value;
+      target.closest('.fl')?.classList.toggle('filled', target.value.length > 0);
+    }
+  });
 });
 
 // parking status — show/hide Type A/B row
@@ -1592,8 +1677,8 @@ document.getElementById('consent').addEventListener('change',()=>{
 
 /* ── STEP NAV ────────────────────────────────────────────────── */
 const secV = {
-  applicants: ()=> V['fw-count']() && V['fw-a1']() && V['fw-pan']() && V['fw-aadhaar']() && V['fw-mob']() && V['fw-email']() && V['fw-a2']() && V['fw-a3']() && V['fw-a4'](),
-  property:   ()=> V['fw-agr']() && V['fw-park']() && V['fw-park-type']() && V['fw-flat']() && V['fw-floor']() && V['fw-addr'](),
+  applicants: ()=> V['fw-count']() && V['fw-a1']() && V['fw-pan']() && V['fw-aadhaar']() && V['fw-mob']() && V['fw-email']() && V['fw-addr']() && V['fw-a2']() && V['fw-a3']() && V['fw-a4'](),
+  property:   ()=> V['fw-agr']() && V['fw-park']() && V['fw-park-type']() && V['fw-flat']() && V['fw-floor'](),
   bank:       ()=> V['fw-bname']() && V['fw-accno']() && V['fw-ifsc']() && V['fw-bnk']() && V['fw-branch'](),
   signature:  ()=> V['fw-sig-type']() && V['fw-sig']() && V['fw-date']() && V['fw-consent'](),
 };
@@ -1647,16 +1732,19 @@ function collect(ref) {
     applicant_2_aadhaar: numApp>=2 ? g('a2_aadhaar').trim() : '',
     applicant_2_mobile: numApp>=2 ? g('a2_mob').trim() : '',
     applicant_2_email: numApp>=2 ? g('a2_email').trim() : '',
+    applicant_2_address: numApp>=2 ? g('a2_addr').trim() : '',
     applicant_3_name: numApp>=3 ? g('a3').trim() : '',
     applicant_3_pan: numApp>=3 ? g('a3_pan').trim() : '',
     applicant_3_aadhaar: numApp>=3 ? g('a3_aadhaar').trim() : '',
     applicant_3_mobile: numApp>=3 ? g('a3_mob').trim() : '',
     applicant_3_email: numApp>=3 ? g('a3_email').trim() : '',
+    applicant_3_address: numApp>=3 ? g('a3_addr').trim() : '',
     applicant_4_name: numApp>=4 ? g('a4').trim() : '',
     applicant_4_pan: numApp>=4 ? g('a4_pan').trim() : '',
     applicant_4_aadhaar: numApp>=4 ? g('a4_aadhaar').trim() : '',
     applicant_4_mobile: numApp>=4 ? g('a4_mob').trim() : '',
     applicant_4_email: numApp>=4 ? g('a4_email').trim() : '',
+    applicant_4_address: numApp>=4 ? g('a4_addr').trim() : '',
     agreement_value:  parseFloat(g('agr')),
     parking_status:   ps,
     parking_type:     ps === 'Not Required' ? '' : (document.querySelector('input[name="park_type"]:checked')?.value || ''),
@@ -1800,6 +1888,7 @@ async function buildPDF(d) {
   row('Aadhaar No.', d.aadhaar_number);
   row('Contact No.', d.contact_number);
   row('Email Address', d.email);
+  row("Applicant's Address", d.address);
 
   for (let i = 2; i <= 4; i++) {
     const name = d[`applicant_${i}_name`];
@@ -1810,6 +1899,7 @@ async function buildPDF(d) {
     if (d[`applicant_${i}_aadhaar`]) row('  Aadhaar No.', d[`applicant_${i}_aadhaar`]);
     if (d[`applicant_${i}_mobile`])  row('  Contact No.', d[`applicant_${i}_mobile`]);
     if (d[`applicant_${i}_email`])   row('  Email Address', d[`applicant_${i}_email`]);
+    if (d[`applicant_${i}_address`]) row("  Applicant's Address", d[`applicant_${i}_address`]);
   }
   y += 5;
 
@@ -1821,7 +1911,6 @@ async function buildPDF(d) {
     : `${d.parking_status}${d.parking_type ? ' — ' + d.parking_type : ''}`;
   row('1 Car Parking Positions (Stack)', parkLabel);
   row('Flat No. & Floor', `${d.flat_no}  (Floor: ${d.floor})`);
-  row('Address', d.address);
   y += 5;
 
   // ── BANK DETAILS ──
@@ -1944,6 +2033,7 @@ function showConfirm(d, ref) {
   const names=[d.applicant_1_name,d.applicant_2_name,d.applicant_3_name,d.applicant_4_name].filter(Boolean).join(' · ');
   const rows=[
     ['Applicant(s)', names],
+    ["Applicant's Address", d.address],
     ['Flat / Floor',  `${d.flat_no} — Floor ${d.floor}`],
     ['Agreement Value', inr(d.agreement_value)],
     ['1 Car Parking Positions in Stack Mechanism (Up or Down)', d.parking_status === 'Not Required' ? 'Not Required' : `${d.parking_status}${d.parking_type ? ' — '+d.parking_type : ''}`],
@@ -2054,6 +2144,11 @@ document.getElementById('newBtn').addEventListener('click', ()=>{
   document.getElementById('aadhaarBackTitle').textContent='Upload Aadhaar Back';
   document.getElementById('panTitle').textContent='Upload PAN Card';
   document.getElementById('dt').value=new Date().toISOString().slice(0,10);
+  [2, 3, 4].forEach(i => {
+    const cb = document.getElementById(`a${i}_same_addr`);
+    if (cb) cb.checked = false;
+  });
+  document.querySelectorAll('.fl').forEach(el=>el.classList.remove('filled'));
   document.querySelectorAll('.field-wrap').forEach(fw=>{
     fw.classList.remove('touched','has-error');
     fw.querySelectorAll('input,textarea,select').forEach(el=>el.classList.remove('valid','invalid'));
